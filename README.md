@@ -1,3 +1,7 @@
+DEMO LINK:    https://drive.google.com/file/d/1AjHdd2C_PzYZso3Y7xLnQzp2EqfoI5pK/view?usp=sharing
+
+
+
 # student-management-system
 Student Management System is a full-stack web application designed for managing student records and scholarship data for an IT department. It enables uploading documents, automates PDF generation, and simplifies data handling for administrative tasks.
 
