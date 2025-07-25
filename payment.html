@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Fee Receipt Upload</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ====== GLOBAL VARIABLES & RESETS ====== */
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent: #e74c3c;
+      --dark: #2c3e50;
+      --light: #ecf0f1;
+      --text: #34495e;
+      --highlight: #f1c40f;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: 70px; /* Offset for fixed navbar */
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      background-color: white;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      padding: 0.5rem 5%;
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(39, 174, 96, 0.1);
+      color: var(--primary);
+    }
+
+    .nav-links a.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .profile-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .profile-icon:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .mobile-menu {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ====== MAIN CONTAINER ====== */
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: -2.5rem auto;
+      background: white;
+      padding: 2.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    /* ====== YEAR SECTIONS ====== */
+    .year-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(236, 240, 241, 0.3);
+      border-radius: var(--border-radius);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .year-section:hover {
+      background: rgba(236, 240, 241, 0.5);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .year-section h3 {
+      margin-top: 0;
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ====== RECEIPT GROUPS ====== */
+    .receipt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .receipt-group {
+      padding: 1.5rem;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+    }
+
+    .receipt-group:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    input[type="number"],
+    input[type="file"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    input[type="number"]:focus,
+    input[type="file"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    /* ====== BUTTONS ====== */
+    .add-receipt-btn {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .add-receipt-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    /* ====== FILE UPLOAD PREVIEW ====== */
+    .file-preview-container {
+      margin-top: 0.5rem;
+    }
+
+    .file-preview {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background-color: rgba(52, 152, 219, 0.1);
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    .file-preview:hover {
+      background-color: rgba(52, 152, 219, 0.2);
+    }
+
+    .file-name {
+      flex-grow: 1;
+      font-size: 0.9rem;
+      color: var(--dark);
+      word-break: break-all;
+    }
+
+    .file-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .view-file-btn, .remove-file-btn {
+      padding: 0.3rem 0.75rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .view-file-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .view-file-btn:hover {
+      background-color: var(--secondary-dark);
+    }
+
+    .remove-file-btn {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .remove-file-btn:hover {
+      background-color: #c0392b;
+    }
+
+    .file-icon {
+      font-size: 0.8rem;
+    }
+
+    /* ====== NAVIGATION BUTTONS ====== */
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2.5rem;
+      gap: 1rem;
+    }
+
+    .back-btn, .next-btn, .save-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-btn {
+      background-color: var(--light);
+      color: var(--dark);
+    }
+
+    .back-btn:hover {
+      background-color: #ddd;
+    }
+
+    .save-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .save-btn:hover {
+      background-color: var(--secondary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+    }
+
+    .next-btn {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .next-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .file-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+
+    /* ====== RESPONSIVE DESIGN ====== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .container {
+        padding: 1.5rem;
+      }
+
+      .year-section {
+        padding: 1rem;
+      }
+
+      .button-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .back-btn, .next-btn, .save-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .file-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .receipt-group {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> StudentSys
+    </div>
+    <ul class="nav-links">
+      <li><a href="SHome.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="SHome.html#about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a href="SHome.html#features"><i class="fas fa-star"></i> Features</a></li>
+      <li><a href="SHome.html#contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+      <li><a href="student-dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li>
+        <div class="profile-icon" onclick="location.href='profile.html'">
+          <i class="fas fa-user"></i>
+        </div>
+      </li>
+    </ul>
+    <div class="mobile-menu">
+      <i class="fas fa-bars"></i>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h2><i class="fas fa-file-invoice-dollar"></i> Upload Academic Fee Receipts</h2>
+
+    <!-- Year 1 -->
+    <div class="year-section" id="year1">
+      <h3><i class="fas fa-calendar-alt"></i> 1st Year</h3>
+      <div class="receipt-list" id="year1-receipts">
+        <div class="receipt-group">
+          <label>Upload Receipt:</label>
+          <input type="file" name="year1_receipt[]" id="year1_receipt_1" class="file-upload" onchange="handleFileUpload(this)">
+          <div id="file-preview-year1_receipt_1" class="file-preview" style="display: none;">
+            <span class="file-name"></span>
+            <div class="file-actions">
+              <button type="button" class="view-file-btn" onclick="viewFile('year1_receipt_1')">
+                <i class="fas fa-eye file-icon"></i> View
+              </button>
+              <button type="button" class="remove-file-btn" onclick="removeFile('year1_receipt_1')">
+                <i class="fas fa-trash file-icon"></i> Remove
+              </button>
+            </div>
+          </div>
+          <label>Fees Paid (₹):</label>
+          <input type="number" name="year1_paid[]" placeholder="e.g., 25000">
+          <label>Total Fees (₹):</label>
+          <input type="number" name="year1_waived[]" placeholder="e.g., 1000">
+          <label>Fees Pending (₹):</label>
+          <input type="number" name="year1_penalty[]" placeholder="e.g., 500">
+        </div>
+      </div>
+      <button type="button" class="add-receipt-btn" onclick="addReceipt('year1')">
+        <i class="fas fa-plus"></i> Add More Receipts
+      </button>
+    </div>
+
+    <!-- Year 2 -->
+    <div class="year-section" id="year2">
+      <h3><i class="fas fa-calendar-alt"></i> 2nd Year</h3>
+      <div class="receipt-list" id="year2-receipts">
+        <div class="receipt-group">
+          <label>Upload Receipt:</label>
+          <input type="file" name="year2_receipt[]" id="year2_receipt_1" class="file-upload" onchange="handleFileUpload(this)">
+          <div id="file-preview-year2_receipt_1" class="file-preview" style="display: none;">
+            <span class="file-name"></span>
+            <div class="file-actions">
+              <button type="button" class="view-file-btn" onclick="viewFile('year2_receipt_1')">
+                <i class="fas fa-eye file-icon"></i> View
+              </button>
+              <button type="button" class="remove-file-btn" onclick="removeFile('year2_receipt_1')">
+                <i class="fas fa-trash file-icon"></i> Remove
+              </button>
+            </div>
+          </div>
+          <label>Fees Paid (₹):</label>
+          <input type="number" name="year2_paid[]" placeholder="e.g., 25000">
+          <label>Total Fees (₹):</label>
+          <input type="number" name="year2_waived[]" placeholder="e.g., 1000">
+          <label>Fees Pending (₹):</label>
+          <input type="number" name="year2_penalty[]" placeholder="e.g., 500">
+        </div>
+      </div>
+      <button type="button" class="add-receipt-btn" onclick="addReceipt('year2')">
+        <i class="fas fa-plus"></i> Add More Receipts
+      </button>
+    </div>
+
+    <!-- Year 3 -->
+    <div class="year-section" id="year3">
+      <h3><i class="fas fa-calendar-alt"></i> 3rd Year</h3>
+      <div class="receipt-list" id="year3-receipts">
+        <div class="receipt-group">
+          <label>Upload Receipt:</label>
+          <input type="file" name="year3_receipt[]" id="year3_receipt_1" class="file-upload" onchange="handleFileUpload(this)">
+          <div id="file-preview-year3_receipt_1" class="file-preview" style="display: none;">
+            <span class="file-name"></span>
+            <div class="file-actions">
+              <button type="button" class="view-file-btn" onclick="viewFile('year3_receipt_1')">
+                <i class="fas fa-eye file-icon"></i> View
+              </button>
+              <button type="button" class="remove-file-btn" onclick="removeFile('year3_receipt_1')">
+                <i class="fas fa-trash file-icon"></i> Remove
+              </button>
+            </div>
+          </div>
+          <label>Fees Paid (₹):</label>
+          <input type="number" name="year3_paid[]" placeholder="e.g., 25000">
+          <label>Total Fees (₹):</label>
+          <input type="number" name="year3_waived[]" placeholder="e.g., 1000">
+          <label>Fees Pending (₹):</label>
+          <input type="number" name="year3_penalty[]" placeholder="e.g., 500">
+        </div>
+      </div>
+      <button type="button" class="add-receipt-btn" onclick="addReceipt('year3')">
+        <i class="fas fa-plus"></i> Add More Receipts
+      </button>
+    </div>
+
+    <!-- Year 4 -->
+    <div class="year-section" id="year4">
+      <h3><i class="fas fa-calendar-alt"></i> 4th Year</h3>
+      <div class="receipt-list" id="year4-receipts">
+        <div class="receipt-group">
+          <label>Upload Receipt:</label>
+          <input type="file" name="year4_receipt[]" id="year4_receipt_1" class="file-upload" onchange="handleFileUpload(this)">
+          <div id="file-preview-year4_receipt_1" class="file-preview" style="display: none;">
+            <span class="file-name"></span>
+            <div class="file-actions">
+              <button type="button" class="view-file-btn" onclick="viewFile('year4_receipt_1')">
+                <i class="fas fa-eye file-icon"></i> View
+              </button>
+              <button type="button" class="remove-file-btn" onclick="removeFile('year4_receipt_1')">
+                <i class="fas fa-trash file-icon"></i> Remove
+              </button>
+            </div>
+          </div>
+          <label>Fees Paid (₹):</label>
+          <input type="number" name="year4_paid[]" placeholder="e.g., 25000">
+          <label>Total Fees (₹):</label>
+          <input type="number" name="year4_waived[]" placeholder="e.g., 1000">
+          <label>Fees Pending (₹):</label>
+          <input type="number" name="year4_penalty[]" placeholder="e.g., 500">
+        </div>
+      </div>
+      <button type="button" class="add-receipt-btn" onclick="addReceipt('year4')">
+        <i class="fas fa-plus"></i> Add More Receipts
+      </button>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="button-row">
+      <button type="button" class="back-btn" onclick="window.location.href='academicinfos.html'">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <button type="button" class="save-btn" onclick="saveDocuments()">
+        <i class="fas fa-save"></i> Save
+      </button>
+      <button type="button" class="next-btn" onclick="window.location.href='placementinfo.html'">
+        Next <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenu.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          navLinks.style.display = 'none';
+        }
+      });
+    });
+
+    /**
+     * Handles file upload and displays preview with view/remove buttons
+     * @param {HTMLInputElement} input - The file input element
+     */
+    function handleFileUpload(input) {
+      const file = input.files[0];
+      const previewId = `file-preview-${input.id}`;
+      const preview = document.getElementById(previewId);
+      
+      if (!preview) {
+        console.error(`Preview element with ID ${previewId} not found`);
+        return;
+      }
+      
+      const fileName = preview.querySelector('.file-name');
+      
+      if (file) {
+        // Show preview and set filename
+        preview.style.display = 'flex';
+        fileName.textContent = file.name;
+        // Store the file URL for viewing
+        input.dataset.fileUrl = URL.createObjectURL(file);
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+
+    /**
+     * Opens the uploaded file in a new tab for viewing
+     * @param {string} inputId - The ID of the file input element
+     */
+    function viewFile(inputId) {
+      const input = document.getElementById(inputId);
+      if (input && input.files.length > 0) {
+        const fileURL = input.dataset.fileUrl;
+        if (fileURL) {
+          window.open(fileURL, '_blank');
+        }
+      }
+    }
+
+    /**
+     * Removes the selected file and hides the preview
+     * @param {string} inputId - The ID of the file input element
+     */
+    function removeFile(inputId) {
+      const input = document.getElementById(inputId);
+      const previewId = `file-preview-${inputId}`;
+      const preview = document.getElementById(previewId);
+      
+      if (!input || !preview) {
+        console.error(`Element not found for inputId: ${inputId}`);
+        return;
+      }
+      
+      input.value = '';
+      preview.style.display = 'none';
+      
+      // Clean up the object URL to prevent memory leaks
+      if (input.dataset.fileUrl) {
+        URL.revokeObjectURL(input.dataset.fileUrl);
+        delete input.dataset.fileUrl;
+      }
+    }
+
+    /**
+     * Adds a new receipt group for the specified year
+     * @param {string} year - The year identifier (year1, year2, etc.)
+     */
+    function addReceipt(year) {
+      const container = document.getElementById(`${year}-receipts`);
+      const count = container.querySelectorAll('.receipt-group').length + 1;
+      
+      const newReceipt = document.createElement('div');
+      newReceipt.className = 'receipt-group';
+      newReceipt.innerHTML = `
+        <label>Upload Receipt:</label>
+        <input type="file" name="${year}_receipt[]" id="${year}_receipt_${count}" class="file-upload" onchange="handleFileUpload(this)">
+        <div id="file-preview-${year}_receipt_${count}" class="file-preview" style="display: none;">
+          <span class="file-name"></span>
+          <div class="file-actions">
+            <button type="button" class="view-file-btn" onclick="viewFile('${year}_receipt_${count}')">
+              <i class="fas fa-eye file-icon"></i> View
+            </button>
+            <button type="button" class="remove-file-btn" onclick="removeFile('${year}_receipt_${count}')">
+              <i class="fas fa-trash file-icon"></i> Remove
+            </button>
+          </div>
+        </div>
+        <label>Fees Paid (₹):</label>
+        <input type="number" name="${year}_paid[]" placeholder="e.g., 25000">
+        <label>Total Fees (₹):</label>
+        <input type="number" name="${year}_waived[]" placeholder="e.g., 1000">
+        <label>Fees Pending (₹):</label>
+        <input type="number" name="${year}_penalty[]" placeholder="e.g., 500">
+      `;
+      
+      container.appendChild(newReceipt);
+    }
+
+    /**
+     * Saves all documents and form data to the server
+     */
+    function saveDocuments() {
+      const formData = new FormData();
+      const inputs = document.querySelectorAll("input");
+
+      const studentEmail = localStorage.getItem("studentEmail");
+      if (!studentEmail) {
+        alert("Student email not found in localStorage.");
+        return;
+      }
+
+      formData.append("studentEmail", studentEmail);
+      
+      // Collect all form data
+      inputs.forEach(input => {
+        if (input.type === "file" && input.files.length > 0) {
+          for (let i = 0; i < input.files.length; i++) {
+            formData.append(input.name, input.files[i]);
+          }
+        } else if (input.type === "number") {
+          formData.append(input.name, input.value);
+        }
+      });
+
+      // Send data to server
+      fetch("/api/payment/upload", {
+        method: "POST",
+        body: formData,
+      })
+        .then(res => res.json())
+        .then(data => {
+          alert("Receipts uploaded successfully.");
+          console.log("Success:", data);
+        })
+        .catch(err => {
+          alert("Upload failed.");
+          console.error("Error:", err);
+        });
+    }
+  </script>
+</body>
+</html>

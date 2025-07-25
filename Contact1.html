@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact - Student Management System</title>
+  <style>
+    /* Same internal CSS */
+    body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); }
+    .logo { font-size: 24px; font-weight: bold; color: #27ae60; }
+    .nav-links { list-style: none; display: flex; gap: 30px; margin-right: 8%; }
+    .nav-links li { display: inline; }
+    .nav-links a { text-decoration: none; color: black; font-size: 16px; font-weight: 500; }
+    
+    .active { color: #27ae60; }
+    .profile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+    .page-title { text-align: center; padding: 100px 0 40px 0; background: #f8f9fa; margin-top: 80px; }
+    .contact-section { padding: 50px 0; }
+    .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
+    .contact-info { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); width: 30%; }
+    .contact-info div { margin-bottom: 20px; }
+    .contact-info i { font-size: 24px; color: #27ae60; }
+    .contact-form { width: 50%; display: flex; flex-direction: column; }
+    .contact-form input, .contact-form textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+    .contact-form button { background-color: #27ae60; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+    .contact-form button:hover { background-color: #219150; }
+    .status-message { margin-top: 10px; color: green; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="logo">StudentSys</div>
+  <ul class="nav-links">
+    <li><a href="Home1.html" class="active">Home</a></li>
+      <li><a href="About1.html" class="active">About Us</a></li>
+      <li><a href="batch.html"> Batches</a></li>
+      <li><a href="Contact1.html" class="active">Contact Us</a></li>
+
+    
+  </ul>
+</nav>
+
+<!-- Contact Section -->
+<section id="contact" class="contact-section">
+  <div class="page-title">
+    <h1>Contact Us</h1>
+    <p>We'd love to hear from you!</p>
+  </div>
+  <div class="container">
+    <div class="contact-info">
+      <div><i class="fas fa-map-marker-alt"></i><p>123 College Road, City, Country</p></div>
+      <div><i class="fas fa-envelope"></i><p>info@college.com</p></div>
+      <div><i class="fas fa-phone"></i><p>+123 456 7890</p></div>
+    </div>
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <textarea placeholder="Your Message" rows="5" required></textarea>
+      <button type="submit">Send Message</button>
+      <p id="status" class="status-message" style="display:none;">Your message has been sent successfully!</p>
+    </form>
+  </div>
+</section>
+
+<script>
+function handleSubmit(event) {
+  event.preventDefault();
+  document.getElementById("status").style.display = "block";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Data</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<!-- <body>
+
+  <div>
+  <h3>Student List - Batch: <span id="selectedBatch"></span></h3>
+  <input type="text" id="searchBar" placeholder="Search by PRN or Name" onkeyup="searchStudent()"/>
+  <p>Total Students: <span id="studentCount">0</span></p>
+  <button onclick="downloadCSV()">Download Report</button>
+
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>PRN</th>
+        <th>Name</th>
+        <th>Email</th>
+       
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+  <script>
+    document.getElementById("batch").textContent = localStorage.getItem("selectedBatch");
+    document.getElementById("year").textContent = localStorage.getItem("selectedYear");
+
+    function searchStudent() {
+      const input = document.getElementById("searchBar").value.toLowerCase();
+      const rows = document.querySelectorAll("#studentTable tbody tr");
+
+      rows.forEach(row => {
+        row.classList.remove("highlight");
+        const name = row.cells[0].textContent.toLowerCase();
+        if (name.includes(input) && input !== "") {
+          row.classList.add("highlight");
+        }
+      });
+    }
+  </script>
+</body> -->
+
+
+
+<body>
+
+  <div>
+  <h3>Student List - Batch: <span id="selectedBatch"></span></h3>
+  <input type="text" id="searchBar" placeholder="Search by PRN or Name" onkeyup="searchStudent()"/>
+  <p>Total Students: <span id="studentCount">0</span></p>
+  <button onclick="downloadCSV()">Download Report</button>
+
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>PRN</th>
+        <th>Name</th>
+        <th>Email</th>
+       
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+  <script>
+    document.getElementById("batch").textContent = localStorage.getItem("selectedBatch");
+    document.getElementById("year").textContent = localStorage.getItem("selectedYear");
+
+    function searchStudent() {
+      const input = document.getElementById("searchBar").value.toLowerCase();
+      const rows = document.querySelectorAll("#studentTable tbody tr");
+
+      rows.forEach(row => {
+        row.classList.remove("highlight");
+        const name = row.cells[0].textContent.toLowerCase();
+        if (name.includes(input) && input !== "") {
+          row.classList.add("highlight");
+        }
+      });
+    }
+  </script>
+</body>
+</html>

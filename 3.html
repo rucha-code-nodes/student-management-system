@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document Upload Section</title>
+  <style>
+    /* Internal CSS from your React project */
+    .navbar {
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 5%;
+      background-color: white;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #27ae60;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+      margin-right: 8%;
+    }
+    .nav-links li {
+      display: inline;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: black;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .active {
+      color: #27ae60;
+    }
+    .profile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+
+    .documents-container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      margin-top: 40px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    h2, h3 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+      font-size: 24px;
+    }
+    .documents-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .document-item, .semester-item {
+      background: #f7f9fa;
+      padding: 20px;
+      border-left: 6px solid #3498db;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    .document-item:hover {
+      background: #eef4f7;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #34495e;
+      display: block;
+    }
+    input[type="file"] {
+      padding: 10px;
+      border: 1px solid #dcdde1;
+      border-radius: 6px;
+      font-size: 15px;
+      width: 100%;
+    }
+    .file-options {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .view-btn, .remove-btn, .back-btn, .submit-btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+    }
+    .view-btn {
+      background: #2ecc71;
+    }
+    .view-btn:hover {
+      background: #27ae60;
+    }
+    .remove-btn {
+      background: #e74c3c;
+    }
+    .remove-btn:hover {
+      background: #c0392b;
+    }
+    .back-btn {
+      background: #3498db;
+    }
+    .back-btn:hover {
+      background: #2980b9;
+    }
+    .submit-btn {
+      background: #f39c12;
+    }
+    .submit-btn:hover {
+      background: #e67e22;
+    }
+    .semester-results {
+      margin-top: 40px;
+    }
+    .semester-box {
+      display: flex;
+      gap: 25px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .semester-item {
+      background: #f1f2f6;
+      padding: 18px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      width: 220px;
+    }
+    
+    @media (max-width: 768px) {
+      .semester-box {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+   <!-- Navbar -->
+<nav class="navbar">
+  <div class="logo">StudentSys</div>
+  <ul class="nav-links">
+    <li><a href="Home.html" class="active">Home</a></li>
+      <li><a href="about.html" class="active">About Us</a></li>
+      <li><a href="student-dashboard.html"> Services</a></li>
+      <li><a href="contact.html" class="active">Contact Us</a></li>
+
+      <li>
+        <div class="profile-icon" onclick="location.href=''">U</div>
+      </li>
+  </ul>
+</nav>
+
+  <div class="documents-container">
+    <h2>Upload Required Documents</h2>
+    <div class="documents-list" id="documentsList"></div>
+
+    <div class="semester-results">
+      <h3>Semester-wise Marksheet Upload</h3>
+      <div class="semester-box" id="semesterBox"></div>
+      <div id="extraSemesters"></div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions" style="display: flex; justify-content: space-between; margin-top: 30px;">
+        <div class="button-row">
+            <button class="back-btn" onclick="window.location.href='student-dashboard.html'">← Back</button>
+            <button class="next-btn" onclick="window.location.href='documents.html'">Next →</button>
+          
+    </div>
+  </div>
+
+  <script>
+    const categoryDocuments = {
+      OPEN: [
+        "Scholarship Form (if applicable)", "Admission Receipt", "CAP Allotment Letter",
+        "Bonafide Certificate", "Domicile & Nationality Certificate", "Parents’ Income Certificate",
+        "Death Certificate of Parent (if applicable)", "SSC", "HSC", "Diploma Marksheet",
+        "Leaving Certificate", "Aadhar Card", "Bank Passbook", "Ration Card", "GAP Certificate (if applicable)"
+      ],
+  OBC: [
+    "Scholarship Form", "Admission Receipt", "CAP Allotment Letter", "Bonafide Certificate",
+    "Domicile & Nationality Certificate", "Parents’ Income Certificate", "Caste Certificate",
+    "Caste Validity Certificate", "Non-Creamy Layer Certificate", "SSC", "HSC", "Diploma Marksheet",
+    "Leaving Certificate", "Aadhar Card", "Bank Passbook", "Ration Card", "GAP Certificate (if applicable)"
+  ],
+  ST: [
+    "Scholarship Form", "Admission Receipt", "CAP Allotment Letter", "Bonafide Certificate",
+    "Domicile & Nationality Certificate", "Parents’ Income Certificate", "Death Certificate of Parent (if applicable)",
+    "Tribe Certificate", "Caste Validity Certificate", "First, Second & Third-year Marksheet",
+    "SSC", "HSC", "Diploma Marksheet", "Leaving Certificate", "Aadhar Card", "Bank Passbook",
+    "Ration Card", "GAP Certificate (if applicable)"
+  ],
+  EBC: [
+    "Scholarship Form", "Admission Receipt", "CAP Allotment Letter", "Bonafide Certificate",
+    "Domicile & Nationality Certificate", "Parents’ Income Certificate", "Death Certificate of Parent (if applicable)",
+    "First, Second & Third-year Marksheet", "SSC", "HSC", "Diploma Marksheet", "Leaving Certificate",
+    "Aadhar Card", "Bank Passbook", "Ration Card", "GAP Certificate (if applicable)"
+  ],
+  SBC: [
+    "Scholarship Form", "Admission Receipt", "CAP Allotment Letter", "Bonafide Certificate",
+    "Domicile & Nationality Certificate", "Parents’ Income Certificate", "Death Certificate of Parent (if applicable)",
+    "Caste Certificate", "Caste Validity Certificate", "Non-Creamy Layer Certificate",
+    "First, Second & Third-year Marksheet", "SSC", "HSC", "Diploma Marksheet", "Leaving Certificate",
+    "Aadhar Card", "Bank Passbook", "Ration Card", "GAP Certificate (if applicable)"
+  ],
+  VJNT: [
+    "Scholarship Form", "Admission Receipt", "CAP Allotment Letter", "Bonafide Certificate",
+    "Domicile & Nationality Certificate", "Parents’ Income Certificate", "Death Certificate of Parent (if applicable)",
+    "Caste Certificate", "Caste Validity Certificate", "Non-Creamy Layer Certificate",
+    "First, Second & Third-year Marksheet", "SSC", "HSC", "Diploma Marksheet", "Leaving Certificate",
+    "Aadhar Card", "Bank Passbook", "Ration Card", "GAP Certificate (if applicable)"
+  ],
+  General: [
+    "Scholarship Form (if applicable)", "Admission Receipt", "CAP Allotment Letter",
+    "Bonafide Certificate", "Domicile & Nationality Certificate", "Parents’ Income Certificate",
+    "Death Certificate of Parent (if applicable)", "First, Second & Third-year Marksheet",
+    "SSC", "HSC", "Diploma Marksheet", "Leaving Certificate", "Aadhar Card", "Bank Passbook",
+    "Ration Card", "GAP Certificate (if applicable)"
+  ]
+    };
+
+    const uploadedDocuments = {};
+    const semesterResults = Array(8).fill(null);
+    const category = "OPEN";
+
+    function renderDocumentList() {
+      const container = document.getElementById("documentsList");
+      categoryDocuments[category].forEach(doc => {
+        const item = document.createElement("div");
+        item.className = "document-item";
+        item.innerHTML = ` 
+          <label>${doc}</label>
+          <input type="file" accept=".pdf,.jpg,.png" onchange="handleFileUpload('${doc}', event)">
+          <div class="file-options" id="file-${doc.replace(/\s/g, '')}"></div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function handleFileUpload(docName, event) {
+      const file = event.target.files[0];
+      if (file) {
+        const fileURL = URL.createObjectURL(file);
+        uploadedDocuments[docName] = fileURL;
+
+        const optionsDiv = document.getElementById(`file-${docName.replace(/\s/g, '')}`);
+        optionsDiv.innerHTML = `
+          <a href="${fileURL}" target="_blank" class="view-btn">View</a>
+          <button class="remove-btn" onclick="removeDocument('${docName}')">Remove</button>
+        `;
+      }
+    }
+
+    function removeDocument(docName) {
+      delete uploadedDocuments[docName];
+      document.getElementById(`file-${docName.replace(/\s/g, '')}`).innerHTML = "";
+    }
+
+    function renderSemesterInputs() {
+      const box = document.getElementById("semesterBox");
+      for (let i = 0; i < 2; i++) {
+        const item = document.createElement("div");
+        item.className = "semester-item";
+        item.innerHTML = `
+          <label>Semester ${i + 1} Result</label>
+          <input type="file" accept=".pdf,.jpg,.png" onchange="handleSemesterUpload(${i}, event)">
+          <div class="file-options" id="sem-${i}"></div>
+        `;
+        box.appendChild(item);
+      }
+    }
+
+    function handleSemesterUpload(index, event) {
+      const file = event.target.files[0];
+      if (file) {
+        const fileURL = URL.createObjectURL(file);
+        semesterResults[index] = fileURL;
+
+        const fileOptions = document.getElementById(`sem-${index}`);
+        fileOptions.innerHTML = `
+          <a href="${fileURL}" target="_blank" class="view-btn">View</a>
+          <button class="remove-btn" onclick="removeSemesterResult(${index})">Remove</button>
+        `;
+        if (index + 1 < semesterResults.length && !document.getElementById(`sem-input-${index + 1}`)) {
+          const extra = document.createElement("div");
+          extra.className = "semester-item";
+          extra.innerHTML = `
+            <label>Semester ${index + 2} Result</label>
+            <input id="sem-input-${index + 1}" type="file" accept=".pdf,.jpg,.png" onchange="handleSemesterUpload(${index + 1}, event)">
+            <div class="file-options" id="sem-${index + 1}"></div>
+          `;
+          document.getElementById("extraSemesters").appendChild(extra);
+        }
+      }
+    }
+
+    function removeSemesterResult(index) {
+      semesterResults[index] = null;
+      document.getElementById(`sem-${index}`).innerHTML = "";
+    }
+
+    renderDocumentList();
+    renderSemesterInputs();
+  </script>
+</body>
+</html>

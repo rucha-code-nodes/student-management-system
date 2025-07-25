@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Management System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Color Palette */
+    :root {
+      --primary: #3498db;    /* Blue */
+      --secondary: #2ecc71;  /* Green */
+      --accent: #e74c3c;     /* Red */
+      --dark: #2c3e50;       /* Dark Blue */
+      --light: #ecf0f1;      /* Light Gray */
+      --text: #34495e;       /* Dark Gray */
+      --highlight: #f1c40f;  /* Yellow */
+    }
+
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      scroll-behavior: smooth;
+      color: var(--text);
+      background-color: #fff;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 5%;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s ease;
+    }
+
+    .navbar.scrolled {
+      padding: 0.8rem 5%;
+      background: rgba(255, 255, 255, 0.98);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+    }
+
+    .logo i {
+      margin-right: 10px;
+      color: var(--secondary);
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-links li {
+      margin-left: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 0.5rem 0;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--secondary);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .get-started {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .get-started:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    }
+
+    .mobile-menu {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--primary);
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('Assets/backgroundimg.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      padding: 0 5%;
+      position: relative;
+      margin-top: 0;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      color: white;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 3.2rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      animation: fadeInUp 1s ease 0.3s forwards;
+      opacity: 0;
+    }
+
+    .explore-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      color: white;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+      transition: all 0.3s ease;
+      animation: fadeInUp 1s ease 0.6s forwards;
+      opacity: 0;
+    }
+
+    .explore-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+    }
+
+    /* About Section */
+    .about-section {
+      padding: 6rem 5%;
+      background-color: var(--light);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-header h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+
+    .section-header p {
+      color: var(--text);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .about-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 3rem;
+    }
+
+    .image-content {
+      flex: 1;
+      min-width: 300px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      transition: transform 0.5s ease;
+    }
+
+    .image-content:hover {
+      transform: translateY(-10px);
+    }
+
+    .image-content img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .image-content:hover img {
+      transform: scale(1.05);
+    }
+
+    .text-content {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .text-content h3 {
+      font-size: 1.8rem;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .text-content p {
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .features-list {
+      list-style: none;
+    }
+
+    .features-list li {
+      margin-bottom: 1rem;
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .features-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--secondary);
+      font-weight: bold;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      padding: 6rem 5%;
+      background-color: white;
+    }
+
+    .contact-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3rem;
+      justify-content: center;
+    }
+
+    .contact-info {
+      flex: 1;
+      min-width: 300px;
+      background: var(--light);
+      padding: 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-info h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-icon {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-right: 1rem;
+      margin-top: 0.2rem;
+    }
+
+    .contact-text {
+      flex: 1;
+    }
+
+    .contact-text h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+      color: var(--dark);
+    }
+
+    .contact-text p {
+      color: var(--text);
+    }
+
+    .contact-form {
+      flex: 1;
+      min-width: 300px;
+      background: var(--light);
+      padding: 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .form-group textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    }
+
+    .status-message {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border-radius: 5px;
+      background-color: rgba(46, 204, 113, 0.2);
+      color: var(--secondary);
+      text-align: center;
+      display: none;
+    }
+
+    /* Features Section */
+    .features-section {
+      padding: 6rem 5%;
+      background: linear-gradient(135deg, var(--primary), var(--dark));
+      color: white;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--highlight);
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+      opacity: 0.9;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--dark);
+      color: white;
+      padding: 3rem 5%;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: white;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links li {
+      margin: 0 1rem;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--highlight);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      margin-bottom: 2rem;
+    }
+
+    .social-links li {
+      margin: 0 1rem;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .social-links a:hover {
+      background: var(--primary);
+      transform: translateY(-5px);
+    }
+
+    .copyright {
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .section-header h2 {
+        font-size: 2rem;
+      }
+
+      .about-content {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .hero {
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+
+      .explore-btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+<nav class="navbar">
+  <div class="logo">
+    <i class="fas fa-graduation-cap"></i> StudentSys
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="#about"><i class="fas fa-info-circle"></i> About Us</a></li>
+    <li><a href="#features"><i class="fas fa-star"></i> Features</a></li>
+    <li><a href="#contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+    <li><a href="login_signup.html" class="get-started">Get Started</a></li>
+  </ul>
+  <div class="mobile-menu">
+    <i class="fas fa-bars"></i>
+  </div>
+</nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>Learning Today, Leading Tomorrow</h1>
+      <p>Comprehensive student management solution for modern educational institutions</p>
+      <a href="login_signup.html" class="explore-btn pulse">Get Started Now</a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about-section">
+    <div class="section-header">
+      <h2>About Our System</h2>
+      <p>Our platform helps students and administrators manage academic records efficiently</p>
+    </div>
+    <div class="about-content">
+      <div class="image-content">
+        <img src="Assets/collegeimage1.jpg" alt="College Campus">
+      </div>
+      <div class="text-content">
+        <h3>Why Choose Our System?</h3>
+        <p>Our Student Management System provides an easy-to-use interface for students to manage their academic records, submit documents, track placements, and apply for scholarships—all in one place.</p>
+        <ul class="features-list">
+          <li>Simplified Document Management</li>
+          <li>Easy Placement Tracking</li>
+          <li>Scholarship Application Support</li>
+          <li>Real-time Academic Record Updates</li>
+          <li>Secure Data Storage</li>
+        </ul>
+        <a href="#features" class="explore-btn">Explore Features</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+<section id="features" class="features-section">
+  <div class="section-header">
+    <h2>Key Features</h2>
+    <p>Discover what makes our system stand out</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-user-plus"></i>
+      </div>
+      <h3>Student Registration</h3>
+      <p>Students can create their own accounts and start building their academic profiles instantly.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-id-card"></i>
+      </div>
+      <h3>Multi-Section Profile</h3>
+      <p>Organized sections for personal, academic, documents, fees, and achievement data.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-edit"></i>
+      </div>
+      <h3>Editable Information</h3>
+      <p>Students can update or edit any detail in their profile at any time for accuracy.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-folder-open"></i>
+      </div>
+      <h3>Document Upload</h3>
+      <p>Upload, manage, and view all required academic and personal documents securely.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-chart-pie"></i>
+      </div>
+      <h3>Admin Dashboard</h3>
+      <p>Admins can view student submissions by class/batch and access complete reports.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-file-signature"></i>
+      </div>
+      <h3>Report Generation</h3>
+      <p>Admins can generate and download student data reports for evaluation and audits.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-bell"></i>
+      </div>
+      <h3>Submission Alerts</h3>
+      <p>Get notified of missing or incomplete sections and take corrective action quickly.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+      <h3>Scholarship & Placement</h3>
+      <p>Apply for scholarships and track placement or internship status through the portal.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+  <section id="contact" class="contact-section">
+    <div class="section-header">
+      <h2>Contact Us</h2>
+      <p>We'd love to hear from you!</p>
+    </div>
+    <div class="contact-container">
+      <div class="contact-info">
+        <h3>Get in Touch</h3>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="contact-text">
+            <h4>Address</h4>
+            <p>123 College Road, City, Country</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="contact-text">
+            <h4>Email</h4>
+            <p>info@studentsys.com</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <div class="contact-text">
+            <h4>Phone</h4>
+            <p>+123 456 7890</p>
+          </div>
+        </div>
+      </div>
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Your Email</label>
+          <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Your Message</label>
+          <textarea id="message" placeholder="Enter your message" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn pulse">Send Message</button>
+        <p id="status" class="status-message">Your message has been sent successfully!</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-logo">StudentSys</div>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+      <ul class="social-links">
+        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+        <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+      </ul>
+      <p class="copyright">© 2023 Student Management System. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // Update active nav link
+          document.querySelectorAll('.nav-links a').forEach(link => {
+            link.classList.remove('active');
+          });
+          this.classList.add('active');
+        }
+      });
+    });
+
+    // Contact form submission
+    function handleSubmit(event) {
+      event.preventDefault();
+      const status = document.getElementById('status');
+      status.style.display = 'block';
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        status.style.display = 'none';
+      }, 3000);
+      
+      // Reset form
+      event.target.reset();
+    }
+
+    // Mobile menu toggle
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenu.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          navLinks.style.display = 'none';
+        }
+      });
+    });
+
+    // Set active nav link based on scroll position
+    window.addEventListener('scroll', function() {
+      const scrollPosition = window.scrollY;
+      
+      document.querySelectorAll('section').forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        const sectionHeight = section.offsetHeight;
+        const sectionId = section.getAttribute('id');
+        
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          document.querySelectorAll('.nav-links a').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${sectionId}`) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

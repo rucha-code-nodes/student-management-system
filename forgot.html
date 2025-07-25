@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forgot Password</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #ffffff, #d8ddde);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input[type="email"],
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #4facfe;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4facfe;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #009ffd;
+    }
+
+    form {
+      display: none;
+    }
+
+    form.active {
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+        border-radius: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Forgot Password</h2>
+
+    <!-- Step 1: Send OTP -->
+    <form id="forgotForm" class="active">
+      <input type="email" id="email" placeholder="Enter your email" required><br>
+      <button type="submit">Send OTP</button>
+    </form>
+
+    <!-- Step 2: Verify OTP -->
+    <form id="otpForm">
+      <input type="text" id="otp" placeholder="Enter OTP" required><br>
+      <button type="submit">Verify OTP</button>
+    </form>
+
+    <!-- Step 3: Reset Password -->
+    <form id="passwordForm">
+      <input type="password" id="newPassword" placeholder="New Password" required><br>
+      <button type="submit">Reset Password</button>
+    </form>
+  </div>
+
+
+  <script>
+    const forgotForm = document.getElementById('forgotForm');
+    const otpForm = document.getElementById('otpForm');
+    const passwordForm = document.getElementById('passwordForm');
+
+    const emailInput = document.getElementById('email'); // reused throughout
+
+    // Step 1: Send OTP
+    forgotForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = emailInput.value;
+
+      try {
+        const res = await fetch('/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+        alert(data.message);
+
+        if (res.status === 200) {
+          forgotForm.style.display = 'none';
+          otpForm.style.display = 'block'; // ✅ Show OTP form
+        }
+      } catch (error) {
+        console.error('Error sending OTP:', error);
+        alert('Something went wrong while sending OTP.');
+      }
+    });
+
+    // Step 2: Verify OTP
+    otpForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = emailInput.value;
+      const otp = document.getElementById('otp').value;
+
+      try {
+        const res = await fetch('/api/auth/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp })
+        });
+
+        const data = await res.json();
+        alert(data.message);
+
+        if (res.status === 200) {
+          otpForm.style.display = 'none';
+          passwordForm.style.display = 'block'; // ✅ Show password form
+        }
+      } catch (error) {
+        console.error('OTP verification failed:', error);
+        alert('Invalid OTP or verification failed.');
+      }
+    });
+
+    // Step 3: Reset Password
+    passwordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = emailInput.value;
+      const otp = document.getElementById('otp').value;
+      const newPassword = document.getElementById('newPassword').value;
+
+      try {
+        const res = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp, newPassword })
+        });
+
+        const data = await res.json();
+        alert(data.message);
+
+        if (res.status === 200) {
+          window.location.href = 'index.html'; // ✅ Redirect to login or home page
+        }
+      } catch (error) {
+        console.error('Error resetting password:', error);
+        alert('Failed to reset password.');
+      }
+    });
+  </script>
+</body>
+</html>

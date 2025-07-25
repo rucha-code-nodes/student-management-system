@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Academic Information</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ====== GLOBAL VARIABLES & RESETS ====== */
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent: #e74c3c;
+      --dark: #2c3e50;
+      --light: #ecf0f1;
+      --text: #34495e;
+      --highlight: #f1c40f;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: 70px; /* Offset for fixed navbar */
+    }
+
+    /* ====== NAVBAR ====== */
+      .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background-color: white;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        transition: var(--transition);
+      }
+
+      .navbar.scrolled {
+        padding: 0.5rem 5%;
+        background-color: rgba(255, 255, 255, 0.95);
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--dark);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-links a:hover {
+        background-color: rgba(39, 174, 96, 0.1);
+        color: var(--primary);
+      }
+
+      .nav-links a.active {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .profile-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: var(--primary);
+        color: white;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .profile-icon:hover {
+        background-color: var(--primary-dark);
+        transform: scale(1.05);
+      }
+
+      .mobile-menu {
+        display: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+    /* ====== MAIN CONTAINER ====== */
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: -2.5rem auto;
+      background: white;
+      padding: 2.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding-top: 20px; 
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    h2 {
+      color: var(--dark);
+      border-bottom: 2px solid #e0e6ed;
+      padding-bottom: 0.75rem;
+      margin-top: 2.5rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    /* ====== FORM STYLES ====== */
+    .year-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(236, 240, 241, 0.3);
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    .year-section:hover {
+      background: rgba(236, 240, 241, 0.5);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .field-group {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    input[type="text"]:focus,
+    input[type="file"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    /* ====== ENHANCED FILE UPLOAD STYLES ====== */
+    .file-upload-container {
+      margin-top: 10px;
+    }
+    
+    .file-preview {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      padding: 8px 12px;
+      background-color: rgba(52, 152, 219, 0.1);
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+    
+    .file-preview:hover {
+      background-color: rgba(52, 152, 219, 0.2);
+    }
+    
+    .file-name {
+      flex-grow: 1;
+      font-size: 14px;
+      color: var(--dark);
+      word-break: break-all;
+    }
+    
+    .file-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .view-file-btn, .remove-file-btn {
+      padding: 4px 10px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition);
+    }
+    
+    .view-file-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .view-file-btn:hover {
+      background-color: var(--secondary-dark);
+    }
+    
+    .remove-file-btn {
+      background-color: var(--accent);
+      color: white;
+    }
+    
+    .remove-file-btn:hover {
+      background-color: #c0392b;
+    }
+    
+    .file-icon {
+      font-size: 14px;
+    }
+
+    /* ====== BUTTONS ====== */
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2.5rem;
+      gap: 1rem;
+    }
+
+    .back-btn, .next-btn, .save-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-btn {
+      background-color: var(--light);
+      color: var(--dark);
+    }
+
+    .back-btn:hover {
+      background-color: #ddd;
+    }
+
+    .save-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .save-btn:hover {
+      background-color: var(--secondary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+    }
+
+    .next-btn {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .next-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    /* ====== RESPONSIVE DESIGN ====== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .container {
+        padding: 1.5rem;
+      }
+
+      .year-section {
+        padding: 1rem;
+      }
+
+      .button-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .back-btn, .next-btn, .save-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .field-group {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> StudentSys
+    </div>
+    <ul class="nav-links">
+      <li><a href="SHome.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="SHome.html#about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a href="SHome.html#features"><i class="fas fa-star"></i> Features</a></li>
+      <li><a href="SHome.html#contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+      <li><a href="student-dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li>
+        <div class="profile-icon" onclick="location.href='profile.html'">
+          <i class="fas fa-user"></i>
+        </div>
+      </li>
+    </ul>
+    <div class="mobile-menu">
+      <i class="fas fa-bars"></i>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1><i class="fas fa-graduation-cap"></i> Academic Marksheet Form</h1>
+    <form id="academicForm" enctype="multipart/form-data">
+
+      <!-- Year 1 -->
+      <div class="year-section">
+        <h2><i class="fas fa-calendar-alt"></i> 1st Year</h2>
+        <div class="row">
+          <div class="field-group">
+            <label>Semester 1 SGPA</label>
+            <input type="text" name="sgpa1" placeholder="e.g. 8.5">
+            <div class="file-upload-container">
+              <label>Upload Semester 1 Marksheet</label>
+              <input type="file" id="marksheet-1" name="marksheet1"  accept="application/pdf" onchange="handleFileUpload(this)">
+              <div class="file-preview" id="file-preview-1" style="display: none;">
+                <span class="file-name"></span>
+                <div class="file-actions">
+                  <button type="button" class="view-file-btn" onclick="viewFile('marksheet-1')">
+                    <i class="fas fa-eye file-icon"></i> View
+                  </button>
+                  <button type="button" class="remove-file-btn" onclick="removeFile('marksheet-1')">
+                    <i class="fas fa-trash file-icon"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Semester 2 SGPA</label>
+            <input type="text" name="sgpa2" placeholder="e.g. 8.2">
+            <div class="file-upload-container">
+              <label>Upload Semester 2 Marksheet</label>
+              <input type="file" id="marksheet-2" name="marksheet2"  accept="application/pdf" onchange="handleFileUpload(this)">
+              <div class="file-preview" id="file-preview-2" style="display: none;">
+                <span class="file-name"></span>
+                <div class="file-actions">
+                  <button type="button" class="view-file-btn" onclick="viewFile('marksheet-2')">
+                    <i class="fas fa-eye file-icon"></i> View
+                  </button>
+                  <button type="button" class="remove-file-btn" onclick="removeFile('marksheet-2')">
+                    <i class="fas fa-trash file-icon"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label>CGPA (1st Year)</label>
+        <input type="text" name="cgpa1" placeholder="e.g. 8.35">
+      </div>
+
+      <!-- Year 2 -->
+      <div class="year-section">
+        <h2><i class="fas fa-calendar-alt"></i> 2nd Year</h2>
+        <div class="row">
+          <div class="field-group">
+            <label>Semester 3 SGPA</label>
+            <input type="text" name="sgpa3" placeholder="e.g. 8.7">
+            <div class="file-upload-container">
+              <label>Upload Semester 3 Marksheet</label>
+              <input type="file" id="marksheet-3" name="marksheet3"  accept="application/pdf" onchange="handleFileUpload(this)">
+              <div class="file-preview" id="file-preview-3" style="display: none;">
+                <span class="file-name"></span>
+                <div class="file-actions">
+                  <button type="button" class="view-file-btn" onclick="viewFile('marksheet-3')">
+                    <i class="fas fa-eye file-icon"></i> View
+                  </button>
+                  <button type="button" class="remove-file-btn" onclick="removeFile('marksheet-3')">
+                    <i class="fas fa-trash file-icon"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Semester 4 SGPA</label>
+            <input type="text" name="sgpa4" placeholder="e.g. 8.9">
+            <div class="file-upload-container">
+              <label>Upload Semester 4 Marksheet</label>
+              <input type="file" id="marksheet-4" name="marksheet4"  accept="application/pdf" onchange="handleFileUpload(this)">
+              <div class="file-preview" id="file-preview-4" style="display: none;">
+                <span class="file-name"></span>
+                <div class="file-actions">
+                  <button type="button" class="view-file-btn" onclick="viewFile('marksheet-4')">
+                    <i class="fas fa-eye file-icon"></i> View
+                  </button>
+                  <button type="button" class="remove-file-btn" onclick="removeFile('marksheet-4')">
+                    <i class="fas fa-trash file-icon"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label>CGPA (2nd Year)</label>
+        <input type="text" name="cgpa2" placeholder="e.g. 8.80">
+      </div>
+
+      <!-- Year 3 -->
+      <div class="year-section">
+        <h2><i class="fas fa-calendar-alt"></i> 3rd Year</h2>
+        <div class="row">
+          <div class="field-group">
+            <label>Semester 5 SGPA</label>
+            <input type="text" name="sgpa5" placeholder="e.g. 9.0">
+            <div class="file-upload-container">
+              <label>Upload Semester 5 Marksheet</label>
+              <input type="file" id="marksheet-5" name="marksheet5"  accept="application/pdf" onchange="handleFileUpload(this)">
+              <div class="file-preview" id="file-preview-5" style="display: none;">
+                <span class="file-name"></span>
+                <div class="file-actions">
+                  <button type="button" class="view-file-btn" onclick="viewFile('marksheet-5')">
+                    <i class="fas fa-eye file-icon"></i> View
+                  </button>
+                  <button type="button" class="remove-file-btn" onclick="removeFile('marksheet-5')">
+                    <i class="fas fa-trash file-icon"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Semester 6 SGPA</label>
+            <input type="text" name="sgpa6" placeholder="e.g. 9.1">
+            <div class="file-upload-container">
+              <label>Upload Semester 6 Marksheet</label>
+              <input type="file" id="marksheet-6" name="marksheet6"  accept="application/pdf" onchange="handleFileUpload(this)">
+              <div class="file-preview" id="file-preview-6" style="display: none;">
+                <span class="file-name"></span>
+                <div class="file-actions">
+                  <button type="button" class="view-file-btn" onclick="viewFile('marksheet-6')">
+                    <i class="fas fa-eye file-icon"></i> View
+                  </button>
+                  <button type="button" class="remove-file-btn" onclick="removeFile('marksheet-6')">
+                    <i class="fas fa-trash file-icon"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label>CGPA (3rd Year)</label>
+        <input type="text" name="cgpa3" placeholder="e.g. 9.05">
+      </div>
+
+      <!-- Year 4 -->
+      <div class="year-section">
+        <h2><i class="fas fa-calendar-alt"></i> 4th Year</h2>
+        <div class="row">
+          <div class="field-group">
+            <label>Semester 7 SGPA</label>
+            <input type="text" name="sgpa7" placeholder="e.g. 9.2">
+            <div class="file-upload-container">
+              <label>Upload Semester 7 Marksheet</label>
+              <input type="file" id="marksheet-7" name="marksheet7"  accept="application/pdf" onchange="handleFileUpload(this)">
+              <div class="file-preview" id="file-preview-7" style="display: none;">
+                <span class="file-name"></span>
+                <div class="file-actions">
+                  <button type="button" class="view-file-btn" onclick="viewFile('marksheet-7')">
+                    <i class="fas fa-eye file-icon"></i> View
+                  </button>
+                  <button type="button" class="remove-file-btn" onclick="removeFile('marksheet-7')">
+                    <i class="fas fa-trash file-icon"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Semester 8 SGPA</label>
+            <input type="text" name="sgpa8" placeholder="e.g. 9.3">
+            <div class="file-upload-container">
+              <label>Upload Semester 8 Marksheet</label>
+              <input type="file" id="marksheet-8" name="marksheet8"  accept="application/pdf" onchange="handleFileUpload(this)">
+              <div class="file-preview" id="file-preview-8" style="display: none;">
+                <span class="file-name"></span>
+                <div class="file-actions">
+                  <button type="button" class="view-file-btn" onclick="viewFile('marksheet-8')">
+                    <i class="fas fa-eye file-icon"></i> View
+                  </button>
+                  <button type="button" class="remove-file-btn" onclick="removeFile('marksheet-8')">
+                    <i class="fas fa-trash file-icon"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label>CGPA (4th Year)</label>
+        <input type="text" name="cgpa4" placeholder="e.g. 9.25">
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="button-row">
+        <button type="button" class="back-btn" onclick="goBack()">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button type="button" class="save-btn" onclick="saveAcademicInfo()">
+          <i class="fas fa-save"></i> Save
+        </button>
+        <button type="button" class="next-btn" onclick="goNext()">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Navbar scroll effect - adds a class when scrolling down
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle functionality
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenu.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          navLinks.style.display = 'none';
+        }
+      });
+    });
+
+    /**
+     * Handles file upload and displays preview
+     * @param {HTMLInputElement} input - The file input element
+     */
+    function handleFileUpload(input) {
+      const file = input.files[0];
+      // Get the preview element ID based on input ID
+      const previewId = `file-preview-${input.id.split('-')[1]}`;
+      const preview = document.getElementById(previewId);
+      const fileName = preview.querySelector('.file-name');
+      
+      if (file) {
+        // 🛑 Enforce PDF
+  if (!file.type.includes("pdf")) {
+    alert("Only PDF files are allowed.");
+    input.value = "";
+    return;
+  }
+        // Show preview and set filename
+        preview.style.display = 'flex';
+        fileName.textContent = file.name;
+        // Store the file URL for viewing (creates a blob URL)
+        input.dataset.fileUrl = URL.createObjectURL(file);
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+    
+    /**
+     * Opens the uploaded file in a new tab for viewing
+     * @param {string} inputId - The ID of the file input element
+     */
+    function viewFile(inputId) {
+      const input = document.getElementById(inputId);
+      if (input.files.length > 0) {
+        const fileURL = input.dataset.fileUrl;
+        window.open(fileURL, '_blank');
+      }
+    }
+    
+    /**
+     * Removes the selected file and hides the preview
+     * @param {string} inputId - The ID of the file input element
+     */
+    function removeFile(inputId) {
+      const input = document.getElementById(inputId);
+      const previewId = `file-preview-${inputId.split('-')[1]}`;
+      const preview = document.getElementById(previewId);
+      
+      // Reset the file input
+      input.value = '';
+      preview.style.display = 'none';
+      
+      // Clean up the object URL to prevent memory leaks
+      if (input.dataset.fileUrl) {
+        URL.revokeObjectURL(input.dataset.fileUrl);
+        delete input.dataset.fileUrl;
+      }
+    }
+    
+    /**
+     * Saves academic information to the server
+     * @param {function} [callback] - Optional callback function to execute after save
+     */
+    function saveAcademicInfo(callback) {
+      const form = document.getElementById("academicForm");
+      const formData = new FormData(form);
+
+      // Get student email from localStorage (assuming it was stored during login)
+      const studentEmail = localStorage.getItem("studentEmail");
+      if (!studentEmail || studentEmail === "undefined") {
+        alert("Error: No student email found. Please log in again.");
+        return;
+      }
+      formData.append("studentEmail", studentEmail);
+
+      // Send data to server
+      fetch("/api/result/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Upload failed");
+        return response.json();
+      })
+      .then(data => {
+        alert("Academic information uploaded successfully.");
+        console.log("Server Response:", data);
+        if (callback) callback();
+      })
+      .catch(error => {
+        console.error("Upload error:", error);
+        alert("Failed to upload academic information.");
+      });
+    }
+
+    /**
+     * Navigates to the next page after saving
+     */
+    function goNext() {
+      saveAcademicInfo(function() {
+        window.location.href = 'payment.html';
+      });
+    }
+
+    /**
+     * Navigates back to the previous page after saving
+     */
+    function goBack() {
+      saveAcademicInfo(function() {
+        window.location.href = 'documents.html';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document Upload Section</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ====== GLOBAL VARIABLES & RESETS ====== */
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent: #e74c3c;
+      --dark: #2c3e50;
+      --light: #ecf0f1;
+      --text: #34495e;
+      --highlight: #f1c40f;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: 70px; /* Offset for fixed navbar */
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      background-color: white;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      padding: 0.5rem 5%;
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(39, 174, 96, 0.1);
+      color: var(--primary);
+    }
+
+    .nav-links a.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .profile-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .profile-icon:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .mobile-menu {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ====== DOCUMENTS CONTAINER ====== */
+    .documents-container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 2.5rem;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    .documents-container h2 {
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    /* ====== DOCUMENTS LIST ====== */
+    .documents-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .document-item {
+      background: var(--light);
+      padding: 1.5rem;
+      border-left: 4px solid var(--primary);
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    .document-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .document-item label {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--dark);
+      display: block;
+    }
+
+    .document-item label.optional {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .document-item label.optional::after {
+      content: " (Optional)";
+      color: var(--medium);
+      font-weight: normal;
+    }
+
+    .file-input-container {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .file-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .file-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .error-message {
+      color: var(--accent);
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    /* ====== FILE OPTIONS ====== */
+    .file-options {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .view-btn, .remove-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .view-btn {
+      background: var(--secondary);
+    }
+
+    .view-btn:hover {
+      background: var(--secondary-dark);
+      transform: translateY(-2px);
+    }
+
+    .remove-btn {
+      background: var(--accent);
+    }
+
+    .remove-btn:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+    }
+
+    /* ====== BUTTON ROW ====== */
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2.5rem;
+      gap: 1rem;
+    }
+
+    .back-btn, .next-btn, .save-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-btn {
+      background-color: var(--light);
+      color: var(--dark);
+    }
+
+    .back-btn:hover {
+      background-color: #ddd;
+    }
+
+    .save-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .save-btn:hover {
+      background-color: var(--secondary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+    }
+
+    .next-btn {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .next-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    /* ====== MODAL ====== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      max-width: 500px;
+      width: 90%;
+      box-shadow: var(--box-shadow);
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--dark);
+    }
+
+    .modal-message {
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .modal-btn {
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .modal-btn:hover {
+      background-color: var(--primary-dark);
+    }
+
+    /* ====== RESPONSIVE DESIGN ====== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .documents-container {
+        padding: 1.5rem;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .document-item {
+        padding: 1rem;
+      }
+
+      .file-options {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> StudentSys
+    </div>
+    <ul class="nav-links">
+      <li><a href="SHome.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="SHome.html#about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a href="SHome.html#features"><i class="fas fa-star"></i> Features</a></li>
+      <li><a href="SHome.html#contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+      <li><a href="student-dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li>
+        <div class="profile-icon" onclick="location.href='profile.html'">
+          <i class="fas fa-user"></i>
+        </div>
+      </li>
+    </ul>
+    <div class="mobile-menu">
+      <i class="fas fa-bars"></i>
+    </div>
+  </nav>
+
+  <body>
+  <!-- Document Upload Container -->
+  <div class="documents-container">
+    <h2><i class="fas fa-file-upload"></i> Upload Required Documents</h2>
+    <div class="documents-list" id="documentsList"></div>
+
+    <!-- Button Row -->
+    <div class="button-row">
+      <button class="back-btn" onclick="window.location.href='academicinfo.html'">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <button class="save-btn" onclick="validateAndSave()">
+        <i class="fas fa-save"></i> Save
+      </button>
+      <button class="next-btn" onclick="validateAndNext()">
+        Next <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div id="errorModal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Missing Documents</h3>
+      <p class="modal-message" id="modalMessage">Please upload all required documents before proceeding.</p>
+      <button class="modal-btn" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const optionalDocuments = [
+      "Parents' Income Certificate", 
+      "GAP Certificate (if applicable)", 
+      "Diploma Marksheet", 
+      "HSC", 
+      "Death Certificate of Parent (if applicable)"
+    ];
+
+    const category = localStorage.getItem("studentCategory") || "OPEN";
+
+    const categoryDocuments = {
+      OPEN: [
+        "CAP Allotment Letter", "Bonafide Certificate", "Domicile & Nationality Certificate", "Parents' Income Certificate",
+        "Death Certificate of Parent (if applicable)", "SSC", "HSC", "Diploma Marksheet",
+        "Leaving Certificate", "Aadhar Card", "Bank Passbook", "Ration Card", "GAP Certificate (if applicable)"
+      ],
+      OBC: [
+        "CAP Allotment Letter", "Bonafide Certificate", "Domicile & Nationality Certificate", "Parents Income Certificate", "Caste Certificate",
+        "Caste Validity Certificate", "Non-Creamy Layer Certificate", "SSC", "HSC", "Diploma Marksheet 5 and 6 sem",
+        "Leaving Certificate", "Aadhar Card", "Bank Passbook", "Ration Card", "GAP Certificate (if applicable)"
+      ],
+      SC: [
+        "CAP Allotment Letter", "Bonafide Certificate", "Domicile & Nationality Certificate", "Parents Income Certificate", "Death Certificate of Parent (if applicable)",
+        "Tribe Certificate", "Caste Validity Certificate", "SSC", "HSC", "Diploma Marksheet 5 and 6 sem", "Leaving Certificate", "Aadhar Card", "Bank Passbook",
+        "Ration Card", "GAP Certificate (if applicable)"
+      ],
+      ST: [
+        "CAP Allotment Letter", "Bonafide Certificate", "Domicile & Nationality Certificate", "Parents Income Certificate", "Death Certificate of Parent (if applicable)",
+        "Tribe Certificate", "Caste Validity Certificate", "SSC", "HSC", "Diploma Marksheet 5 and 6 sem", "Leaving Certificate", "Aadhar Card", "Bank Passbook",
+        "Ration Card", "GAP Certificate (if applicable)"
+      ],
+      EBC: [
+        "CAP Allotment Letter", "Bonafide Certificate", "Domicile & Nationality Certificate", "Parents Income Certificate", "Death Certificate of Parent (if applicable)",
+        "SSC", "HSC", "Diploma Marksheet 5 and 6 sem", "Leaving Certificate", "Aadhar Card", "Bank Passbook", "Ration Card", "GAP Certificate (if applicable)"
+      ],
+      SBC: [
+        "CAP Allotment Letter", "Bonafide Certificate", "Domicile & Nationality Certificate", "Parents Income Certificate", "Death Certificate of Parent (if applicable)",
+        "Caste Certificate", "Caste Validity Certificate", "Non-Creamy Layer Certificate", "SSC", "HSC", "Diploma Marksheet 5 and 6 sem", "Leaving Certificate",
+        "Aadhar Card", "Bank Passbook", "Ration Card", "GAP Certificate (if applicable)"
+      ],
+      VJNT: [
+        "CAP Allotment Letter", "Bonafide Certificate", "Domicile & Nationality Certificate", "Parents Income Certificate", "Death Certificate of Parent (if applicable)",
+        "Caste Certificate", "Caste Validity Certificate", "Non-Creamy Layer Certificate", "SSC", "HSC", "Diploma Marksheet 5 and 6 sem", "Leaving Certificate",
+        "Aadhar Card", "Bank Passbook", "Ration Card", "GAP Certificate (if applicable)"
+      ],
+      General: [
+        "CAP Allotment Letter", "Bonafide Certificate", "Domicile & Nationality Certificate", "Parents Income Certificate",
+        "Death Certificate of Parent (if applicable)", "SSC", "HSC", "Diploma Marksheet 5 and 6 sem", "Leaving Certificate", "Aadhar Card", "Bank Passbook",
+        "Ration Card", "GAP Certificate (if applicable)"
+      ]
+    };
+
+    const uploadedDocuments = {};
+
+    function renderDocumentList() {
+      const container = document.getElementById("documentsList");
+      container.innerHTML = "";
+      const docs = categoryDocuments[category] || [];
+
+      docs.forEach(doc => {
+        const id = doc.replace(/\s/g, '');
+        const isOptional = optionalDocuments.some(optDoc => doc.includes(optDoc));
+
+        const item = document.createElement("div");
+        item.className = "document-item";
+        item.innerHTML = `
+          <label class="${isOptional ? 'optional' : ''}">${doc}</label>
+          <div class="file-input-container">
+            <input type="file" class="file-input" accept=".pdf,.jpg,.png" onchange="handleFileUpload('${id}', '${doc}', event)">
+          </div>
+          <div class="error-message" id="error-${id}">This document is required</div>
+          <div class="file-options" id="file-${id}"></div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function handleFileUpload(id, docName, event) {
+      const file = event.target.files[0];
+      if (file) {
+        const fileURL = URL.createObjectURL(file);
+        uploadedDocuments[docName] = fileURL;
+
+        const optionsDiv = document.getElementById(`file-${id}`);
+        optionsDiv.innerHTML = `
+          <a href="${fileURL}" target="_blank" class="view-btn">
+            <i class="fas fa-eye"></i> View
+          </a>
+          <button class="remove-btn" onclick="removeFile('${id}', '${docName}')">
+            <i class="fas fa-trash"></i> Remove
+          </button>
+        `;
+
+        document.getElementById(`error-${id}`).style.display = 'none';
+      }
+    }
+
+    function removeFile(id, docName) {
+      delete uploadedDocuments[docName];
+      const optionsDiv = document.getElementById(`file-${id}`);
+      optionsDiv.innerHTML = "";
+      const input = document.querySelector(`input[onchange*="${id}"]`);
+      if (input) input.value = "";
+    }
+
+    function validateDocuments() {
+      let isValid = true;
+      const missingDocuments = [];
+      const docs = categoryDocuments[category] || [];
+
+      docs.forEach(doc => {
+        const id = doc.replace(/\s/g, '');
+        const isOptional = optionalDocuments.some(optDoc => doc.includes(optDoc));
+        const uploaded = uploadedDocuments[doc];
+
+        if (!isOptional && !uploaded) {
+          isValid = false;
+          missingDocuments.push(doc);
+          document.getElementById(`error-${id}`).style.display = 'block';
+        } else {
+          document.getElementById(`error-${id}`).style.display = 'none';
+        }
+      });
+
+      return { isValid, missingDocuments };
+    }
+
+    function validateAndSave() {
+      const { isValid, missingDocuments } = validateDocuments();
+
+      if (isValid) {
+        saveDocuments();
+      } else {
+        showErrorModal(missingDocuments);
+      }
+    }
+
+    function validateAndNext() {
+      const { isValid, missingDocuments } = validateDocuments();
+
+      if (isValid) {
+        window.location.href = 'academicinfos.html';
+      } else {
+        showErrorModal(missingDocuments);
+      }
+    }
+
+    function saveDocuments() {
+      const formData = new FormData();
+      const studentEmail = localStorage.getItem("studentEmail");
+
+      if (!studentEmail) {
+        alert("No student email found. Please log in.");
+        return;
+      }
+
+      formData.append("studentEmail", studentEmail);
+
+      const allInputs = document.querySelectorAll('input[type="file"]');
+      allInputs.forEach(input => {
+        if (input.files.length > 0) {
+          const label = input.closest(".document-item").querySelector("label");
+          const docName = label ? label.textContent.trim() : "Document";
+          formData.append("documents", input.files[0], docName);
+        }
+      });
+
+      fetch("/api/documents/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("Documents uploaded successfully!");
+        console.log("Upload success:", data);
+      })
+      .catch(err => {
+        console.error("Upload error:", err);
+        alert("Upload failed.");
+      });
+    }
+
+    function showErrorModal(missingDocuments) {
+      const modal = document.getElementById('errorModal');
+      const message = document.getElementById('modalMessage');
+
+      if (missingDocuments.length > 0) {
+        message.innerHTML = `The following required documents are missing:<br><br>${missingDocuments.join('<br>')}`;
+      } else {
+        message.textContent = 'Please upload all required documents before proceeding.';
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('errorModal').style.display = 'none';
+    }
+
+    renderDocumentList();
+  </script>
+</body>
+</html>

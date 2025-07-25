@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Year</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ====== GLOBAL VARIABLES & RESETS ====== */
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent: #e74c3c;
+      --dark: #2c3e50;
+      --light: #ecf0f1;
+      --text: #34495e;
+      --highlight: #f1c40f;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ====== NAVBAR ====== */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background-color: white;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  padding: 0.5rem 5%;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--dark);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-links a:hover {
+  background-color: rgba(39, 174, 96, 0.1);
+  color: var(--primary);
+}
+
+.nav-links a.active {
+  background-color: var(--primary);
+  color: white;
+}
+
+
+/* Profile Dropdown */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-icon:hover {
+  background-color: var(--primary-dark);
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 120%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1001;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 0.8rem 1rem;
+  color: var(--dark);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.dropdown-menu a:hover {
+  background-color: var(--light);
+  color: var(--primary);
+}
+
+
+    /* ====== MAIN CONTAINER ====== */
+    .container {
+      width: 95%;
+      max-width: 1200px;
+      margin: 6rem auto 2rem;
+      padding: 2rem;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    h1 {
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* ====== SEARCH BAR ====== */
+    .search-bar {
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .search-input {
+      flex-grow: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    /* ====== TABLE STYLES ====== */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    th {
+      background-color: var(--light);
+      color: var(--dark);
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:hover {
+      background-color: rgba(52, 152, 219, 0.05);
+    }
+
+    /* ====== BUTTON STYLES ====== */
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    /* ====== RESPONSIVE DESIGN ====== */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      table {
+        font-size: 0.9rem;
+      }
+
+      th, td {
+        padding: 0.75rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+        margin-top: 5rem;
+      }
+
+      .search-bar {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> StudentSys
+    </div>
+    <ul class="nav-links">
+      <li><a href="/HTML_CSS_System/Index.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="/HTML_CSS_System/Index.html#about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a href="/HTML_CSS_System/Index.html#features"><i class="fas fa-star"></i> Features</a></li>
+      <li><a href="/HTML_CSS_System/Index.html#contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+            <li><a href="batch.html" class="active"><i class="fas fa-tachometer-alt"></i> Batch</a></li>
+            <li><a href="/login_signup.html"><i class="fas fa-home"></i>Logout</a></li>
+      <li>
+    </ul>
+    <div class="mobile-menu">
+      <i class="fas fa-bars"></i>
+    </div>
+  </nav>
+
+    <!-- Main Content -->
+  <div class="container">
+    <h1><i class="fas fa-users"></i> Student Records</h1>
+    
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search by Name or PRN..." onkeyup="searchTable()">
+      <button class="btn btn-primary" onclick="searchTable()">
+        <i class="fas fa-search"></i> Search
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table id="studentTable">
+        <thead>
+          <tr>
+            <th>PRN</th>
+            <th>Name</th>
+            <th>Roll No</th>
+            <th>Branch</th>
+             <th>Class</th>
+
+            <th>DOB</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Admission Year</th>
+            <th>Mode</th>
+            <th>Caste</th>
+            <th>Sub-caste</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2254491246002</td>
+            <td>Rucha Ahire</td>
+            <td>68</td>
+            <td>2004-09-12</td>
+            <td>ahirerucha81@gmail.com</td>
+            <td>9766488848</td>
+            <td>2022</td>
+            <td>cap</td>
+            <td>SBC</td>
+            <td>hindu-sali</td>
+            <td>
+              <button class="btn btn-primary btn-sm">
+                <i class="fas fa-eye"></i> View
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>23054491246503</td>
+            <td>Riddhi Patil</td>
+            <td>69</td>
+            <td>2004-08-09</td>
+            <td>riddhipatil28@gmail.com</td>
+            <td>8765432109</td>
+            <td>2022</td>
+            <td>cap</td>
+            <td>OBC</td>
+            <td>hindu</td>
+            <td>
+              <button class="btn btn-primary btn-sm">
+                <i class="fas fa-eye"></i> View
+              </button>
+            </td>
+          </tr>
+          <!-- Add more rows as needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+function deleteStudent(email) {
+    if (confirm("Are you sure you want to delete this student? This cannot be undone.")) {
+        fetch(`/api/delete/student/${email}`, {
+            method: "DELETE",
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            location.reload();
+        })
+        .catch(error => {
+            console.error("Error deleting student:", error);
+            alert("Something went wrong while deleting.");
+        });
+    }
+}
+
+
+
+
+let jsPDF;
+window.addEventListener('load', () => {
+  jsPDF = window.jspdf.jsPDF;
+});
+////////////////////////////////////////////////////GENERATE FUNC//
+async function generatePDF(student) {
+  console.log("Generating PDF for:", student);
+  const doc = new jsPDF();
+
+// 🔴 Set larger font size just for title
+doc.setFontSize(16);  // <-- larger size for title
+doc.setFont(undefined, 'bold');
+doc.text("• General Information", 10, 10);
+
+// 🔵 Reset to normal for the rest
+doc.setFontSize(14);
+doc.setFont(undefined, 'normal');
+
+  const lines = [
+    `Name: ${student.name || ""}`,
+    `PRN: ${student.prn || ""}`,
+    `Roll No: ${student.rollNo || ""}`,
+    `Branch: ${student.branch || ""}`,           // ✅ Add
+  `Class: ${student.className || ""}`,          // ✅ Add
+    `DOB: ${student.dob || ""}`,
+    `Email: ${student.email || ""}`,
+    `Phone: ${student.phone || ""}`,
+    `Admission Year: ${student.admissionYear || ""}`,
+    `Mode: ${student.admissionMode || ""}`,
+    `Caste: ${student.casteCategory || ""}`,
+    `Sub-Caste: ${student.subCaste || ""}`
+  ];
+
+  lines.forEach((line, i) => {
+    doc.text(line, 10, 20 + i * 10);
+  });
+
+  let y = 20 + lines.length * 10 + 10;
+doc.setFontSize(16); // ← Increase font size
+doc.setFont(undefined, "bold"); // Optional: make it bold
+doc.text("• Student Academic Marksheet", 10, y);
+
+// Reset font size if needed for following content
+doc.setFontSize(14);
+doc.setFont(undefined, "normal");
+y += 10;
+  try {
+    const result = await fetch(`/api/result/${student.email}`).then(r => r.json());
+    const r = result || {};
+
+    doc.setFont(undefined, "normal");
+    doc.text("1st Year", 10, y); y += 10;
+
+    if (r.sgpa1) {
+      doc.text(`Semester 1 SGPA: ${r.sgpa1}`, 10, y); y += 10;
+      if (r.marksheets?.marksheet1?.url) {
+  doc.textWithLink(`Semester 1 Marksheet: ${r.marksheets.marksheet1.originalname}`, 10, y, { url: r.marksheets.marksheet1.url }); 
+  y += 10;
+}
+    }
+
+    if (r.sgpa2) {
+      doc.text(`Semester 2 SGPA: ${r.sgpa2}`, 10, y); y += 10;
+      if (r.marksheets?.marksheet2?.url) {
+  doc.textWithLink(`Semester 2 Marksheet: ${r.marksheets.marksheet2.originalname}`, 10, y, { url: r.marksheets.marksheet2.url }); 
+  y += 10;
+}
+    }
+
+    if (r.cgpa1) {
+      doc.text(`CGPA: ${r.cgpa1}`, 10, y); y += 10;
+    }
+
+    // 📌 You can copy this block for Years 2–4 (sgpa3,4 cgpa2 etc.) later if needed.
+
+//✅ Add Uploaded Documents section
+    const documentsRes = await fetch(`/api/documents/${student.email}`);
+
+    const documentsData = await documentsRes.json();
+
+    if (documentsData.length > 0 && documentsData[0].documents?.length > 0) {
+      const documents = documentsData[0].documents;
+
+      y += 10;
+
+doc.setFontSize(16); // Increase font size
+doc.setFont(undefined, "bold");
+doc.text("• Uploaded Documents", 10, y);
+
+doc.setFontSize(14); // Reset to normal size
+doc.setFont(undefined, "normal");
+y += 10;
+
+      for (let i = 0; i < documents.length; i++) {
+        const docItem = documents[i];
+        if (y > 270) {  // Page overflow check
+          doc.addPage();
+          y = 20;
+        }
+  const cleanDocName = docItem.docName
+  .replace(/[‘’]/g, "'")
+  .replace(/[“”]/g, '"')
+  .replace(/[\u2018\u2019]/g, "'")
+  .replace(/[\u201C\u201D]/g, '"');
+
+const shortName = cleanDocName.length > 50 ? cleanDocName.slice(0, 50) + "..." : cleanDocName;
+doc.textWithLink(shortName, 10, y, { url: docItem.cloudinaryUrl });
+
+        y += 10;
+      }
+    } else {
+      y += 10;
+      doc.setFont(undefined, "italic");
+      doc.text("No uploaded documents found.", 10, y);
+      y += 10;
+    }
+
+
+  } catch (err) {
+    console.error("Failed to fetch academic result:", err);
+    doc.setFont(undefined, "italic");
+    doc.text("⚠️ Could not fetch academic marks", 10, y); y += 10;
+  }
+
+//FEES
+let feeData = {};
+try {
+  const feeRes = await fetch(`/api/payment/${student.email}`);
+  if (!feeRes.ok) throw new Error("No payment data");
+  feeData = await feeRes.json();
+} catch (err) {
+  console.warn("⚠️ Could not fetch fee data:", err);
+  doc.setFont(undefined, "italic");
+  doc.text("⚠️ Could not fetch fee payment data", 10, y); 
+  y += 10;
+}
+
+y += 10;
+
+doc.setFontSize(16); // ✅ Increase font size
+doc.setFont(undefined, "bold");
+doc.text("• Fee Payment Details", 10, y);
+
+doc.setFontSize(14); // 🔁 Reset font size for normal text
+doc.setFont(undefined, "normal");
+y += 10;
+
+
+const years = ["year1", "year2", "year3", "year4"];
+
+for (let year of years) {
+  const yearData = feeData[year];
+  if (yearData?.length > 0) {
+    doc.setFont(undefined, "bold");
+    doc.text(`YEAR ${year.slice(-1)}`, 10, y);
+    y += 10;
+
+    for (let i = 0; i < yearData.length; i++) {
+      const receipt = yearData[i];
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+
+      const fileName = receipt.originalname?.length > 50
+        ? receipt.originalname.slice(0, 50) + "..."
+        : receipt.originalname || "Receipt";
+
+      doc.setFont(undefined, "normal");
+      doc.textWithLink(`Receipt ${i + 1}: ${fileName}`, 10, y, { url: receipt.url });
+      y += 8;
+      doc.text(`Fees Paid: ${receipt.paid || 0}`, 10, y); y += 8;
+      const totalFees = (receipt.paid || 0) + (receipt.waived || 0) + (receipt.penalty || 0);
+      doc.text(`Total Fees: ${totalFees}`, 10, y); y += 8;
+      const pending = totalFees - (receipt.paid || 0);
+      doc.text(`Fees Pending: ${pending}`, 10, y); y += 10;
+    }
+  } else {
+    doc.text(`No data for ${year.toUpperCase()}`, 10, y);
+    y += 10;
+  } 
+}
+
+//SCHOLRSHIP
+// === Uploaded Scholarship Forms ===
+let scholarshipStartY = y + 3; // 👈 Use `y` from your fee section, and just add a small gap
+if (scholarshipStartY > 270) {
+  doc.addPage();
+  scholarshipStartY = 20;
+}
+
+doc.setFont(undefined, 'bold'); // 🔹 Make bold
+doc.text("• Scholarship Form", 10, scholarshipStartY);
+
+doc.setFontSize(14); // 🔁 Reset to normal size for rest of the text
+doc.setFont(undefined, 'normal'); // 🔁 Reset font style
+
+
+scholarshipStartY += 10;
+
+try {
+  const scholarshipRes = await fetch(`/api/scholarship/${student.email}`);
+  const scholarshipForms = await scholarshipRes.json();
+
+  if (scholarshipForms.length === 0) {
+    doc.setFontSize(12);
+    doc.text("No scholarship forms uploaded.", 10, scholarshipStartY);
+  } else {
+    doc.setFontSize(12);
+    scholarshipForms.forEach((form, index) => {
+      const line = `${index + 1}. ${form.originalName}`;
+      const date = `Uploaded at: ${new Date(form.uploadedAt).toLocaleString()}`;
+
+      // Check if space available, else go to next page
+      if (scholarshipStartY > 270) {
+        doc.addPage();
+        scholarshipStartY = 20;
+      }
+
+      // Make file name clickable
+      doc.textWithLink(line, 10, scholarshipStartY, { url: form.cloudinaryUrl });
+      scholarshipStartY += 6;
+      doc.text(date, 15, scholarshipStartY);
+      scholarshipStartY += 10;
+    });
+  }
+} catch (err) {
+  console.error("Error fetching scholarship forms:", err);
+  doc.text("Error loading scholarship forms.", 10, scholarshipStartY);
+}
+
+// === Internship Details ===
+// Small gap after scholarship section
+let internshipStartY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 5 : scholarshipStartY + 10;
+if (internshipStartY > 270) {
+  doc.addPage();
+  internshipStartY = 20;
+}
+
+doc.setFontSize(16); // ✅ Increase font size
+doc.setFont(undefined, 'bold'); // ✅ Make bold
+doc.text("• Internship Details", 10, internshipStartY); // ✅ Add bullet point
+
+doc.setFontSize(14); // 🔁 Reset font size for rest of the content
+doc.setFont(undefined, 'normal'); // 🔁 Reset font style
+
+
+internshipStartY += 10;
+
+try {
+  const internshipRes = await fetch(`/api/internship/${student.email}`);
+  const internships = await internshipRes.json();
+
+  if (internships.length === 0) {
+    doc.setFontSize(12);
+    doc.text("No internship data found.", 10, internshipStartY);
+  } else {
+    for (let i = 0; i < internships.length; i++) {
+      const entry = internships[i];
+
+      const fields = [
+        `Company: ${entry.companyName || '-'}`,
+        `Role: ${entry.jobRole || '-'}`,
+        `Date: ${entry.internshipDate || '-'}`,
+        `Status: ${entry.status || '-'}`,
+        `Duration: ${entry.duration || '-'}`
+      ];
+
+      fields.forEach(field => {
+        if (internshipStartY > 270) {
+          doc.addPage();
+          internshipStartY = 20;
+        }
+        doc.text(field, 10, internshipStartY);
+        internshipStartY += 6;
+      });
+
+      // Attachments (Make them clickable)
+      const attachments = [
+        { label: "Offer Letter", file: entry.offerLetter },
+        { label: "Certificate", file: entry.certificate },
+        { label: "Joining Letter", file: entry.joiningLetter }
+      ];
+
+      attachments.forEach(att => {
+        if (att.file && att.file.url) {
+          if (internshipStartY > 270) {
+            doc.addPage();
+            internshipStartY = 20;
+          }
+          doc.textWithLink(att.label, 10, internshipStartY, { url: att.file.url });
+          internshipStartY += 6;
+        }
+      });
+
+      internshipStartY += 5; // space between internships
+    }
+  }
+} catch (err) {
+  console.error("Error fetching internship data:", err);
+  doc.text("Error loading internship data.", 10, internshipStartY);
+}
+
+//ACHIEVEMNET CERTIFICATE
+// === Achievements Certificates ===
+// Small gap after internship section
+let certStartY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 5 : internshipStartY + 10;
+if (certStartY > 270) {
+  doc.addPage();
+  certStartY = 20;
+}
+
+doc.setFontSize(16); // ✅ Increase font size
+doc.setFont(undefined, 'bold'); // ✅ Make bold
+doc.text("• Achievements Certificates", 10, certStartY); // ✅ Add bullet
+
+doc.setFontSize(14); // 🔁 Reset font size for other content
+doc.setFont(undefined, 'normal'); // 🔁 Reset font style
+
+
+certStartY += 10;
+
+try {
+  const certRes = await fetch(`/api/certificates/student/${student.email}`);
+  const certData = await certRes.json();
+  const certificates = certData.certificates;
+
+  if (!certificates || certificates.length === 0) {
+    doc.setFontSize(12);
+    doc.text("No certificates uploaded.", 10, certStartY);
+  } else {
+    doc.setFontSize(12);
+    certificates.forEach((cert, index) => {
+      if (certStartY > 270) {
+        doc.addPage();
+        certStartY = 20;
+      }
+
+      const label = `${index + 1}. ${cert.name || 'Certificate'}`;
+      doc.textWithLink(label, 10, certStartY, { url: cert.filePath }); // clickable link
+      certStartY += 8;
+    });
+  }
+} catch (err) {
+  console.error("Error fetching certificates:", err);
+  doc.text("Error loading achievements certificates.", 10, certStartY);
+}
+
+// Add spacing after Achievements section
+y += 10;
+
+
+
+// === Placement Details ===
+// === Fetch Placement Data ===
+try {
+  const placementRes = await fetch(`/api/placement/${student.email}`);
+  const placements = await placementRes.json();
+
+  student.placements = placements; // ✅ assign to student.placements so rendering block works
+} catch (err) {
+  console.error("Error fetching placement data:", err);
+  student.placements = []; // Fallback to empty
+}
+
+let placementStartY = certStartY + 10; // Make sure it comes after certificates
+
+if (placementStartY > 270) {
+  doc.addPage();
+  placementStartY = 20;
+}
+
+doc.setFontSize(16);
+doc.setFont(undefined, "bold");
+doc.text("• Placement Details", 10, placementStartY);
+placementStartY += 10;
+
+doc.setFontSize(14);
+doc.setFont(undefined, "normal");
+
+// Render fetched placement data (fetched earlier and stored in student.placements)
+if (student.placements && student.placements.length > 0) {
+  student.placements.forEach((placement, index) => {
+    const placeLines = [
+      `${index + 1}. Company: ${placement.companyName || ""}`,
+      `   Role: ${placement.jobRole || ""}`,
+      `   Date: ${placement.placementDate ? new Date(placement.placementDate).toLocaleDateString() : ""}`,
+      `   Status: ${placement.status || ""}`,
+      `   Package: ${placement.package || ""}`
+    ];
+
+    placeLines.forEach(line => {
+      doc.text(line, 10, placementStartY);
+      placementStartY += 8;
+    });
+
+    if (placement.offerLetter?.url) {
+      doc.setTextColor(0, 0, 255);
+      doc.textWithLink("   Offer Letter", 10, placementStartY, { url: placement.offerLetter.url });
+      placementStartY += 8;
+      doc.setTextColor(0, 0, 0);
+    }
+
+    if (placement.joiningLetter?.url) {
+      doc.setTextColor(0, 0, 255);
+      doc.textWithLink("   Joining Letter", 10, placementStartY, { url: placement.joiningLetter.url });
+      placementStartY += 8;
+      doc.setTextColor(0, 0, 0);
+    }
+
+    placementStartY += 4;
+  });
+} else {
+  doc.text("No placement data available.", 10, placementStartY);
+  placementStartY += 10;
+}
+
+// Optional: update y for next section
+y = placementStartY;
+
+
+
+
+  // ✅ Add profile image if available
+  if (student.profileImage && !student.profileImage.startsWith("blob:")) {
+    try {
+      const imgData = await fetch(student.profileImage).then(r => r.blob()).then(blobToBase64);
+      doc.addImage(imgData, "JPEG", 140, 10, 50, 50);
+    } catch (err) {
+      console.warn("⚠️ Failed to fetch image:", err);
+    }
+  }
+
+  doc.save(`${student.name || "profile"}.pdf`);
+}
+
+
+/////////////////////////////////////////////////////
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    const batch = localStorage.getItem("selectedBatch");
+
+    function selectYear(year) {
+      localStorage.setItem("selectedYear", year);
+      window.location.href = "students.html";
+    }
+
+    function searchTable() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const rows = document.querySelectorAll("#studentTable tbody tr");
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+
+ function viewProfile(email) {
+  console.log("👁️ View clicked for:", email); // ✅ DEBUG
+
+  fetch(`http://localhost:3000/api/student/profile/email/${email}`)
+    .then((res) => res.json())
+    .then((student) => {
+      console.log("✅ Student data:", student); // ✅ DEBUG
+      generatePDF(student);
+    })
+    .catch((err) => console.error("❌ Error fetching profile:", err));
+}
+
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+  const batch = localStorage.getItem("selectedBatch");
+  if (batch) {
+    const admissionYear = parseInt(batch.split(" - ")[0]);
+    fetchStudentsByYear(admissionYear);
+  }
+});
+
+function fetchStudentsByYear(year) {
+  fetch(`http://localhost:3000/api/student/byYear/${year}`)
+    .then((res) => res.json())
+    .then((students) => {
+      const tbody = document.querySelector("#studentTable tbody");
+      tbody.innerHTML = ""; // Clear any static rows
+
+      students.forEach((student) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${student.prn || ""}</td>
+        <td>${student.name || ""}</td>
+          <td>${student.rollNo || ""}</td>
+          <td>${student.branch || ""}</td>            <!-- ✅ NEW -->
+  <td>${student.className || ""}</td>         <!-- ✅ NEW -->
+          <td>${student.dob ? new Date(student.dob).toISOString().split('T')[0] : ""}</td>
+          <td>${student.email || ""}</td>
+          <td>${student.phone || ""}</td>
+          <td>${student.admissionYear || ""}</td>
+          <td>${student.admissionMode || ""}</td>
+<td>${student.casteCategory || ""}</td>
+          <td>${student.subCaste || ""}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" onclick="viewProfile('${student.email}')">
+              <i class="fas fa-eye"></i> View
+            </button>
+           <button class="btn btn-sm" style="margin-top:15px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;" onclick="deleteStudent('${student.email}', this)">
+  <i class="fas fa-trash-alt"></i> Delete
+</button>
+
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    })
+    .catch((err) => {
+      console.error("Error fetching students:", err);
+    });
+}
+
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  
+</body>
+</html> 

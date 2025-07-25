@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scholarship Form Upload</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ====== GLOBAL VARIABLES & RESETS ====== */
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent: #e74c3c;
+      --dark: #2c3e50;
+      --light: #ecf0f1;
+      --text: #34495e;
+      --highlight: #f1c40f;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: 70px; /* Offset for fixed navbar */
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      background-color: white;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      padding: 0.5rem 5%;
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: var(--primary);
+    }
+
+    .nav-links a.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .profile-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .profile-icon:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .mobile-menu {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ====== MAIN CONTAINER ====== */
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin: -2.5rem auto;
+      background: white;
+      padding: 2.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      text-align: center;
+    }
+
+    h2 {
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .description {
+      color: var(--text);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    /* ====== UPLOAD SECTION ====== */
+    .upload-section {
+      margin: 2rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .upload-btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+    }
+
+    .upload-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    }
+
+    .upload-btn:active {
+      transform: translateY(0);
+    }
+
+    #scholarshipUpload {
+      display: none;
+    }
+
+    .file-info {
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .file-name {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      word-break: break-all;
+    }
+
+    /* ====== ACTION BUTTONS ====== */
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .view-btn, .delete-btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .view-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .view-btn:hover {
+      background-color: var(--secondary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(46, 204, 113, 0.2);
+    }
+
+    .delete-btn {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background-color: #c0392b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(231, 76, 60, 0.2);
+    }
+
+    /* ====== NAVIGATION BUTTONS ====== */
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      gap: 1rem;
+    }
+
+    .back-btn, .submit-btn, .next-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-btn {
+      background-color: var(--light);
+      color: var(--dark);
+    }
+
+    .back-btn:hover {
+      background-color: #ddd;
+    }
+
+    .submit-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--secondary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+    }
+
+    .next-btn {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .next-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    /* ====== RESPONSIVE DESIGN ====== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .container {
+        padding: 1.5rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .navigation-buttons {
+        flex-direction: column;
+      }
+
+      .back-btn, .submit-btn, .next-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> StudentSys
+    </div>
+    <ul class="nav-links">
+      <li><a href="SHome.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="SHome.html#about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a href="SHome.html#features"><i class="fas fa-star"></i> Features</a></li>
+      <li><a href="SHome.html#contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+      <li><a href="student-dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li>
+        <div class="profile-icon" onclick="location.href='profile.html'">
+          <i class="fas fa-user"></i>
+        </div>
+      </li>
+    </ul>
+    <div class="mobile-menu">
+      <i class="fas fa-bars"></i>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h2><i class="fas fa-file-invoice-dollar"></i> Scholarship Form Upload</h2>
+    <p class="description">Please upload your scholarship form in PDF format. Ensure all information is accurate before submitting.</p>
+
+    <div class="upload-section">
+      <label for="scholarshipUpload" id="uploadBtn" class="upload-btn">
+        <i class="fas fa-cloud-upload-alt"></i> Upload Scholarship Form
+      </label>
+      <input type="file" id="scholarshipUpload" accept=".pdf" onchange="handleFileUpload(event)">
+      
+      <div class="file-info">
+        <p id="fileName" class="file-name" style="display: none;"></p>
+        
+        <div id="actionButtons" class="action-buttons" style="display: none;">
+          <button class="view-btn" onclick="viewFile()">
+            <i class="fas fa-eye"></i> View
+          </button>
+          <button class="delete-btn" onclick="removeFile()">
+            <i class="fas fa-trash"></i> Remove
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="navigation-buttons">
+      <button class="back-btn" onclick="window.location.href='placementinfo.html'">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <button class="submit-btn" onclick="submitForm()">
+        Save
+      </button>
+      <button class="next-btn" onclick="window.location.href='internship.html'">
+        Next <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenu.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // File upload variables
+    let uploadedFile = null;
+
+    /**
+     * Handles file upload and displays file info
+     * @param {Event} event - The file input change event
+     */
+    function handleFileUpload(event) {
+      uploadedFile = event.target.files[0];
+      if (uploadedFile) {
+        document.getElementById('fileName').textContent = "Uploaded: " + uploadedFile.name;
+        document.getElementById('fileName').style.display = 'block';
+        document.getElementById('uploadBtn').innerHTML = '<i class="fas fa-sync-alt"></i> Replace File';
+        document.getElementById('actionButtons').style.display = 'flex';
+      }
+    }
+
+    /**
+     * Opens the uploaded file in a new tab
+     */
+    function viewFile() {
+      if (uploadedFile) {
+        const fileURL = URL.createObjectURL(uploadedFile);
+        window.open(fileURL, '_blank');
+      }
+    }
+
+    /**
+     * Removes the selected file and resets the UI
+     */
+    function removeFile() {
+      uploadedFile = null;
+      document.getElementById('fileName').style.display = 'none';
+      document.getElementById('uploadBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Scholarship Form';
+      document.getElementById('actionButtons').style.display = 'none';
+      document.getElementById('scholarshipUpload').value = "";
+    }
+
+    /**
+     * Submits the form to the server
+     */
+    async function submitForm() {
+      const studentEmail = localStorage.getItem('studentEmail') || localStorage.getItem('userEmail');
+      
+      if (!studentEmail) {
+        alert('You are not logged in. Please log in first.');
+        return;
+      }
+
+      if (!uploadedFile) {
+        alert('Please upload your scholarship form first.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('scholarshipUpload', uploadedFile);
+      formData.append('studentEmail', studentEmail);
+
+      try {
+        const response = await fetch('/api/scholarship/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert('Scholarship form uploaded successfully!');
+          console.log(result);
+        } else {
+          alert('Upload failed: ' + (result.error || result.message));
+          console.error(result);
+        }
+      } catch (err) {
+        alert('An error occurred during upload. Please try again.');
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>

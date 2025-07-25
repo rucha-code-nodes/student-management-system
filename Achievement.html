@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Achievement Certificate Upload</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ====== GLOBAL VARIABLES & RESETS ====== */
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent: #e74c3c;
+      --dark: #2c3e50;
+      --light: #ecf0f1;
+      --text: #34495e;
+      --highlight: #f1c40f;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: 70px; /* Offset for fixed navbar */
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      background-color: white;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      padding: 0.5rem 5%;
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: var(--primary);
+    }
+
+    .nav-links a.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .profile-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .profile-icon:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .mobile-menu {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ====== MAIN CONTAINER ====== */
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin: -4.5rem auto;
+      background: white;
+      padding: 2.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      text-align: center;
+    }
+
+    h1 {
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    h3 {
+      color: var(--dark);
+      margin: 2rem 0 1rem;
+      font-size: 1.3rem;
+    }
+
+    /* ====== FORM ELEMENTS ====== */
+    input[type="text"], 
+    input[type="file"] {
+      width: 100%;
+      max-width: 500px;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    input[type="text"]:focus,
+    input[type="file"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    /* ====== BUTTON STYLES ====== */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    .btn-success {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: var(--secondary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+    }
+
+    .btn-danger {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #c0392b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+
+    .certificate-list {
+      list-style: none;
+      margin: 2rem 0;
+      padding: 0;
+    }
+
+    .certificate-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      margin: 0.75rem 0;
+      background-color: rgba(52, 152, 219, 0.1);
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    .certificate-item:hover {
+      background-color: rgba(52, 152, 219, 0.2);
+    }
+
+    .certificate-link {
+      flex-grow: 1;
+      text-align: left;
+      color: var(--dark);
+      text-decoration: none;
+      word-break: break-all;
+      padding-right: 1rem;
+    }
+
+    .certificate-link:hover {
+      color: var(--primary);
+    }
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .container {
+        padding: 1.5rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> StudentSys
+    </div>
+    <ul class="nav-links">
+      <li><a href="SHome.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="SHome.html#about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a href="SHome.html#features"><i class="fas fa-star"></i> Features</a></li>
+      <li><a href="SHome.html#contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+      <li><a href="student-dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li>
+        <div class="profile-icon" onclick="location.href='profile.html'">
+          <i class="fas fa-user"></i>
+        </div>
+      </li>
+    </ul>
+    <div class="mobile-menu">
+      <i class="fas fa-bars"></i>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1><i class="fas fa-trophy"></i> Upload Achievement Certificates</h1>
+
+    <input type="text" id="studentNameInput" placeholder="Enter certificate name (e.g., 'Science Olympiad Winner 2023')" />
+
+    <div style="margin: 1.5rem 0;">
+      <input type="file" id="certificateInput" name="certificate" accept=".pdf,.jpg,.jpeg,.png">
+      <button class="btn btn-primary" onclick="addCertificate()" style="margin-top: 1rem;">
+        <i class="fas fa-plus"></i> Add Certificate
+      </button>
+    </div>
+
+    <h3><i class="fas fa-file-alt"></i> Uploaded Certificates</h3>
+    <ul id="certificateList" class="certificate-list"></ul>
+
+    <div class="button-group">
+      <button class="btn" onclick="window.location.href='internship.html'">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <button class="btn btn-success" onclick="saveCertificates()">
+        <i class="fas fa-save"></i> Save 
+      </button>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenu.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    const certificateList = document.getElementById('certificateList');
+    const uploadedCertificates = [];
+
+    function addCertificate() {
+      const input = document.getElementById('certificateInput');
+      const nameInput = document.getElementById('studentNameInput');
+      const file = input.files[0];
+
+      if (!nameInput.value) {
+        alert('Please enter a certificate name.');
+        return;
+      }
+
+      if (!file) {
+        alert('Please select a certificate file to upload.');
+        return;
+      }
+
+      const certificate = {
+        name: nameInput.value,
+        file: file,
+        url: URL.createObjectURL(file)
+      };
+      uploadedCertificates.push(certificate);
+
+      const listItem = document.createElement('li');
+      listItem.className = 'certificate-item';
+
+      const fileLink = document.createElement('a');
+      fileLink.href = certificate.url;
+      fileLink.textContent = `${certificate.name} (${file.name})`;
+      fileLink.className = 'certificate-link';
+      fileLink.target = '_blank';
+
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.className = 'btn btn-danger';
+      deleteButton.innerHTML = '<i class="fas fa-trash"></i> Delete';
+      deleteButton.onclick = () => {
+        certificateList.removeChild(listItem);
+        const index = uploadedCertificates.indexOf(certificate);
+        if (index > -1) {
+          URL.revokeObjectURL(certificate.url);
+          uploadedCertificates.splice(index, 1);
+        }
+      };
+
+      listItem.appendChild(fileLink);
+      listItem.appendChild(deleteButton);
+      certificateList.appendChild(listItem);
+
+      input.value = '';
+      nameInput.value = '';
+    }
+
+    async function saveCertificates() {
+      const studentEmail = localStorage.getItem('studentEmail');
+      
+      if (!studentEmail) {
+        alert('You are not logged in. Please log in first.');
+        return;
+      }
+
+      if (uploadedCertificates.length === 0) {
+        alert('Please add at least one certificate before saving.');
+        return;
+      }
+
+      try {
+        for (const cert of uploadedCertificates) {
+          const formData = new FormData();
+          formData.append('certificate', cert.file);
+          formData.append('name', cert.name);
+          formData.append('studentEmail', studentEmail);
+
+          const response = await fetch('/api/certificates/upload', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to upload certificate');
+          }
+        }
+
+        alert('All certificates saved successfully!');
+        certificateList.innerHTML = '';
+        uploadedCertificates.length = 0;
+      } catch (error) {
+        console.error('Error saving certificates:', error);
+        alert('An error occurred while saving certificates. Please try again.');
+      }
+    }
+  </script>
+</body>
+</html>

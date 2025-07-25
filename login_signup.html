@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / Sign Up</title>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
+      background-image: ('D:/finalsms/student/HTML_CSS_System/Assets/logimg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .auth-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .login-box,
+    .signup-box {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+      animation: slideIn 0.8s ease-out;
+      transition: all 0.5s ease;
+    }
+
+    .login-box:hover,
+    .signup-box:hover {
+      box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.25);
+      transform: translateY(-5px);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    .user-type-selector {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .user-type-selector button {
+      padding: 8px 20px;
+      margin: 0 5px;
+      border: 2px solid #2773ae;
+      background-color: transparent;
+      color: #2773ae;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .user-type-selector button:hover {
+      background-color: rgba(39, 115, 174, 0.1);
+    }
+
+    .user-type-selector .selected {
+      background-color: #2773ae;
+      color: white;
+    }
+
+    form input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      transition: border-color 0.3s ease;
+      font-size: 14px;
+    }
+
+    form input:focus {
+      border-color: #2773ae;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(39, 115, 174, 0.2);
+    }
+
+    form button {
+      width: 100%;
+      padding: 12px;
+      background-color: #2773ae;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    form button:hover {
+      background-color: #1f5f93;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .toggle-text {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .toggle-text span {
+      color: #2773ae;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .toggle-text span:hover {
+      color: #1f5f93;
+      text-decoration: underline;
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
+
+    .forgot-password a {
+      font-size: 13px;
+      color: #2773ae;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-password a:hover {
+      color: #1f5f93;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <!-- Login Form -->
+    <div class="login-box" id="loginBox">
+      <h2>Login as</h2>
+      <div class="user-type-selector">
+        <button id="studentBtn" class="selected">Student</button>
+        <button id="adminBtn">Admin</button>
+      </div>
+      <form id="loginForm">
+        <input type="email" id="loginUsername" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <div class="forgot-password">
+          <a href="forgot.html">Forgot Password?</a>
+        </div>
+        <button type="submit">Log In</button>
+      </form>
+      <p class="toggle-text">
+        New User? <span id="showSignUp">Sign Up here</span>
+      </p>
+    </div>
+
+    <!-- Sign-Up Form -->
+    <div class="signup-box" id="signupBox" style="display: none;">
+      <h2>Sign Up</h2>
+      <form id="signupForm">
+        <input type="text" id="signupUsername" placeholder="Username" required />
+        <input type="email" id="signupEmail" placeholder="Email" required />
+        <input type="number" id="signupPRN" placeholder="PRN" required />
+        <input type="password" id="signupPassword" placeholder="Password" required />
+        <button type="submit">Sign Up</button>
+      </form>
+      <p class="toggle-text">
+        Already have an account? <span id="showLogin">Log In here</span>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const loginBox = document.getElementById("loginBox");
+    const signupBox = document.getElementById("signupBox");
+    const showSignUp = document.getElementById("showSignUp");
+    const showLogin = document.getElementById("showLogin");
+    const studentBtn = document.getElementById("studentBtn");
+    const adminBtn = document.getElementById("adminBtn");
+    let userType = "student";
+
+    // Add animation when switching between forms
+    showSignUp.onclick = () => {
+      loginBox.style.animation = "fadeIn 0.5s reverse forwards";
+      setTimeout(() => {
+        loginBox.style.display = "none";
+        signupBox.style.display = "block";
+        signupBox.style.animation = "slideIn 0.5s forwards";
+      }, 250);
+    };
+
+    showLogin.onclick = () => {
+      signupBox.style.animation = "fadeIn 0.5s reverse forwards";
+      setTimeout(() => {
+        signupBox.style.display = "none";
+        loginBox.style.display = "block";
+        loginBox.style.animation = "slideIn 0.5s forwards";
+      }, 250);
+    };
+
+    studentBtn.onclick = () => {
+      userType = "student";
+      studentBtn.classList.add("selected");
+      adminBtn.classList.remove("selected");
+    };
+
+    adminBtn.onclick = () => {
+      userType = "admin";
+      adminBtn.classList.add("selected");
+      studentBtn.classList.remove("selected");
+    };
+
+    // Login form logic
+    document.getElementById("loginForm").onsubmit = async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        // ✅ Save the email to localStorage
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem('studentEmail', email);
+        localStorage.setItem("username", data.username); // optional
+
+        if (data.role === 'admin') {
+          alert('Admin login successful!');
+          window.location.href = "admin/mhome.html";
+        } else {
+          alert(`Welcome, ${data.username}`);
+          window.location.href = "SHome.html";
+        }
+      } else {
+        alert(data.message);
+      }
+    };
+
+    // Signup logic
+    document.getElementById("signupForm").onsubmit = async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("signupUsername").value;
+      const email = document.getElementById("signupEmail").value;
+      const prn = document.getElementById("signupPRN").value;
+      const password = document.getElementById("signupPassword").value;
+
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, prn, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Signup successful!");
+        signupBox.style.animation = "fadeIn 0.5s reverse forwards";
+        setTimeout(() => {
+          signupBox.style.display = "none";
+          loginBox.style.display = "block";
+          loginBox.style.animation = "slideIn 0.5s forwards";
+          document.getElementById("loginUsername").value = email;
+        }, 250);
+      } else {
+        alert(data.message);
+      }
+    };
+  </script>
+</body>
+</html>

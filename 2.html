@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Academic Info</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    .navbar {
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 5%;
+      background-color: white;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #27ae60;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+      margin-right: 8%;
+    }
+    .nav-links li {
+      display: inline;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: black;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .active {
+      color: #27ae60;
+    }
+    .profile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+
+    .academic-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%;
+      max-width: 1000px;
+      margin: auto;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      font-family: "Segoe UI", sans-serif;
+      margin-top: 30px;
+    }
+    .profile-section {
+      display: flex;
+      align-items: flex-start;
+      width: 100%;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    .profile-photo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .profile-photo {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #007bff;
+      margin-bottom: 10px;
+    }
+    .upload-btn {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 15px;
+    }
+    .upload-btn:hover {
+      background-color: #0056b3;
+    }
+    .info-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .info-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+    .info-group label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    .info-group input,
+    .info-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .row .info-group {
+      flex: 1;
+    }
+    .button-row {
+      margin-top: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+    .back-btn,
+    .next-btn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .back-btn:hover,
+    .next-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar moved to the top -->
+  <nav class="navbar">
+    <div class="logo">StudentSys</div>
+    <ul class="nav-links">
+      <li><a href="Home.html" class="active">Home</a></li>
+      <li><a href="about.html" class="active">About Us</a></li>
+      <li><a href="student-dashboard.html"> Services</a></li>
+      <li><a href="contact.html" class="active">Contact Us</a></li>
+
+      <li>
+        <div class="profile-icon" onclick="location.href='studnet-profile'">U</div>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="academic-container">
+    <div class="profile-section">
+      <div class="profile-photo-container">
+        <img id="profilePreview" src="https://via.placeholder.com/150" alt="Profile" class="profile-photo">
+        <input type="file" accept="image/*" id="profileUpload" style="display: none;">
+        <label for="profileUpload" class="upload-btn">Choose Photo</label>
+      </div>
+      <div class="info-section">
+        <div class="info-group">
+          <label>Name</label>
+          <input type="text" placeholder="Full Name">
+        </div>
+        <div class="info-group">
+          <label>PRN</label>
+          <input type="text" placeholder="PRN Number">
+        </div>
+        <div class="info-group">
+          <label>ABC ID</label>
+          <input type="text" placeholder="ABC ID">
+        </div>
+        <div class="info-group">
+          <label>Roll No</label>
+          <input type="text" placeholder="Roll Number">
+        </div>
+        <div class="info-group">
+          <label>Date of Birth</label>
+          <input type="date">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="info-group">
+        <label>Phone No</label>
+        <input type="text" placeholder="Phone Number">
+      </div>
+      <div class="info-group">
+        <label>Personal Email ID</label>
+        <input type="email" placeholder="Email Address">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="info-group">
+        <label>Admission Year</label>
+        <select id="admissionYearSelect">
+          <option value="">Select Admission Year</option>
+        </select>
+      </div>
+      <div class="info-group">
+        <label>Admission Mode</label>
+        <select>
+          <option value="">Select Admission Mode</option>
+          <option value="CAP">CAP</option>
+          <option value="NON-CAP">NON-CAP</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="info-group">
+        <label>Caste Category</label>
+        <select id="categorySelect">
+          <option value="">Select Category</option>
+          <option value="OPEN">OPEN</option>
+          <option value="OBC">OBC</option>
+          <option value="SC">SC</option>
+          <option value="ST">ST</option>
+          <option value="EBC">EBC</option>
+          <option value="SBC">SBC</option>
+          <option value="VJNT">VJNT</option>
+          <option value="General">General</option>
+        </select>
+      </div>
+      <div class="info-group">
+        <label>Sub-Caste</label>
+        <input type="text" placeholder="Sub-Caste">
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button class="back-btn" onclick="window.location.href='student-dashboard.html'">← Back</button>
+      <button class="next-btn" onclick="window.location.href='documents.html'">Next →</button>
+    </div>
+  </div>
+
+  <script>
+    // Profile image preview
+    const profileUpload = document.getElementById("profileUpload");
+    const profilePreview = document.getElementById("profilePreview");
+    profileUpload.addEventListener("change", function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const imageURL = URL.createObjectURL(file);
+        profilePreview.src = imageURL;
+      }
+    });
+
+    // Populate admission year
+    const admissionYearSelect = document.getElementById("admissionYearSelect");
+    for (let i = 2001; i <= 2030; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      admissionYearSelect.appendChild(option);
+    }
+
+    // Handle caste category selection
+    const categorySelect = document.getElementById("categorySelect");
+    categorySelect.addEventListener("change", function() {
+      localStorage.setItem("studentCategory", this.value);
+    });
+  </script>
+
+</body>
+</html>

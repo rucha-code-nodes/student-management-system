@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Internship Details</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ====== GLOBAL VARIABLES & RESETS ====== */
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent: #e74c3c;
+      --dark: #2c3e50;
+      --light: #ecf0f1;
+      --text: #34495e;
+      --highlight: #f1c40f;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: 70px; /* Offset for fixed navbar */
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      background-color: white;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      padding: 0.5rem 5%;
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: var(--primary);
+    }
+
+    .nav-links a.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .profile-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .profile-icon:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .mobile-menu {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ====== MAIN CONTAINER ====== */
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: -2.5rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    /* ====== FORM ENTRY STYLES ====== */
+    .entry {
+      border: 1px solid #e0e0e0;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: var(--border-radius);
+      background-color: #fafafa;
+      transition: var(--transition);
+    }
+
+    .entry:hover {
+      background-color: #f5f5f5;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .entry label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .entry input[type="text"],
+    .entry input[type="date"],
+    .entry select {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .entry input[type="text"]:focus,
+    .entry input[type="date"]:focus,
+    .entry select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    /* ====== FILE UPLOAD STYLES ====== */
+    .file-upload-wrapper {
+      margin-top: 0.5rem;
+    }
+
+    .file-preview {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background-color: rgba(52, 152, 219, 0.1);
+      border-radius: var(--border-radius);
+    }
+
+    .file-name {
+      flex-grow: 1;
+      font-size: 0.9rem;
+      color: var(--dark);
+      word-break: break-all;
+    }
+
+    .file-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .view-file-btn, .remove-file-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .view-file-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .view-file-btn:hover {
+      background-color: var(--secondary-dark);
+    }
+
+    .remove-file-btn {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .remove-file-btn:hover {
+      background-color: #c0392b;
+    }
+
+    /* ====== BUTTON STYLES ====== */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    .btn-success {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: var(--secondary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+    }
+
+    .btn-danger {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #c0392b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+
+    /* ====== NAVIGATION BUTTONS ====== */
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+
+    /* ====== RESPONSIVE DESIGN ====== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .container {
+        padding: 1.5rem;
+      }
+
+      .entry {
+        padding: 1rem;
+      }
+
+      .navigation-buttons {
+        flex-direction: column;
+      }
+
+      .file-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> StudentSys
+    </div>
+    <ul class="nav-links">
+      <li><a href="SHome.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="SHome.html#about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a href="SHome.html#features"><i class="fas fa-star"></i> Features</a></li>
+      <li><a href="SHome.html#contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+      <li><a href="student-dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li>
+        <div class="profile-icon" onclick="location.href='profile.html'">
+          <i class="fas fa-user"></i>
+        </div>
+      </li>
+    </ul>
+    <div class="mobile-menu">
+      <i class="fas fa-bars"></i>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1><i class="fas fa-briefcase"></i> Internship Details</h1>
+    
+    <form id="internshipForm">
+      <div class="entry">
+        <label>Company Name:</label>
+        <input type="text" name="companyName[]" placeholder="Enter company name">
+        
+        <label>Job Role:</label>
+        <input type="text" name="jobRole[]" placeholder="Enter job role">
+        
+        <label>Date:</label>
+        <input type="date" name="internshipDate[]">
+        
+        <label>Status:</label>
+        <select name="status[]">
+          <option value="Completed">Completed</option>
+          <option value="Ongoing">Ongoing</option>
+          <option value="Not Joined Yet">Not Joined Yet</option>
+        </select>
+        
+        <label>Duration:</label>
+        <input type="text" name="duration[]" placeholder="Enter duration (e.g. 6 months)">
+        
+        <label>Offer Letter:</label>
+        <div class="file-upload-wrapper">
+          <input type="file" name="offerLetter[]" class="file-upload" onchange="handleFileUpload(this)">
+          <div class="file-preview" style="display: none;">
+            <span class="file-name"></span>
+            <div class="file-actions">
+              <button type="button" class="view-file-btn" onclick="viewFile(this)">
+                <i class="fas fa-eye"></i> View
+              </button>
+              <button type="button" class="remove-file-btn" onclick="removeFile(this)">
+                <i class="fas fa-trash"></i> Remove
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <label>Certificate:</label>
+        <div class="file-upload-wrapper">
+          <input type="file" name="certificate[]" class="file-upload" onchange="handleFileUpload(this)">
+          <div class="file-preview" style="display: none;">
+            <span class="file-name"></span>
+            <div class="file-actions">
+              <button type="button" class="view-file-btn" onclick="viewFile(this)">
+                <i class="fas fa-eye"></i> View
+              </button>
+              <button type="button" class="remove-file-btn" onclick="removeFile(this)">
+                <i class="fas fa-trash"></i> Remove
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <label>Joining Letter:</label>
+        <div class="file-upload-wrapper">
+          <input type="file" name="joiningLetter[]" class="file-upload" onchange="handleFileUpload(this)">
+          <div class="file-preview" style="display: none;">
+            <span class="file-name"></span>
+            <div class="file-actions">
+              <button type="button" class="view-file-btn" onclick="viewFile(this)">
+                <i class="fas fa-eye"></i> View
+              </button>
+              <button type="button" class="remove-file-btn" onclick="removeFile(this)">
+                <i class="fas fa-trash"></i> Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <button type="button" class="btn btn-primary" onclick="addInternship()">
+        <i class="fas fa-plus"></i> Add Another Internship
+      </button>
+    </form>
+    
+    <div class="navigation-buttons">
+      <button class="btn" onclick="window.location.href='scholarshipinfo.html'">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <button class="btn btn-success" onclick="saveDocuments()">
+        <i class="fas fa-save"></i> Save 
+      </button>
+      <button class="btn btn-primary" onclick="window.location.href='Achievement.html'">
+        Next <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenu.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    /**
+     * Handles file upload and displays preview
+     * @param {HTMLInputElement} input - The file input element
+     */
+    function handleFileUpload(input) {
+      const file = input.files[0];
+      const preview = input.nextElementSibling;
+      const fileName = preview.querySelector('.file-name');
+      
+      if (file) {
+        // Show preview and set filename
+        preview.style.display = 'flex';
+        fileName.textContent = file.name;
+        // Store the file URL for viewing
+        input.dataset.fileUrl = URL.createObjectURL(file);
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+
+    /**
+     * Views the uploaded file
+     * @param {HTMLButtonElement} button - The view button that was clicked
+     */
+    function viewFile(button) {
+      const preview = button.closest('.file-preview');
+      const input = preview.previousElementSibling;
+      
+      if (input.files.length > 0) {
+        const fileURL = input.dataset.fileUrl;
+        window.open(fileURL, '_blank');
+      }
+    }
+
+    /**
+     * Removes the selected file
+     * @param {HTMLButtonElement} button - The remove button that was clicked
+     */
+    function removeFile(button) {
+      const preview = button.closest('.file-preview');
+      const input = preview.previousElementSibling;
+      
+      input.value = '';
+      preview.style.display = 'none';
+      
+      // Clean up the object URL to prevent memory leaks
+      if (input.dataset.fileUrl) {
+        URL.revokeObjectURL(input.dataset.fileUrl);
+        delete input.dataset.fileUrl;
+      }
+    }
+
+    /**
+     * Adds a new internship entry to the form
+     */
+    function addInternship() {
+      const form = document.getElementById("internshipForm");
+      const firstEntry = document.querySelector(".entry");
+      const newEntry = firstEntry.cloneNode(true);
+      
+      // Clear all input values in the new entry
+      newEntry.querySelectorAll("input").forEach(input => {
+        if (input.type !== "file") {
+          input.value = "";
+        } else {
+          input.value = "";
+          const preview = input.nextElementSibling;
+          preview.style.display = "none";
+          if (input.dataset.fileUrl) {
+            URL.revokeObjectURL(input.dataset.fileUrl);
+            delete input.dataset.fileUrl;
+          }
+        }
+      });
+      
+      // Reset select elements
+      newEntry.querySelectorAll("select").forEach(select => {
+        select.selectedIndex = 0;
+      });
+      
+      // Insert before the "Add Another Internship" button
+      const addButton = form.querySelector(".btn-primary");
+      form.insertBefore(newEntry, addButton);
+    }
+
+    /**
+     * Saves all internship documents and form data to the server
+     */
+    async function saveDocuments() {
+      const form = document.getElementById("internshipForm");
+      const formData = new FormData(form);
+
+      // Add studentEmail from localStorage
+      const studentEmail = localStorage.getItem("studentEmail");
+      if (!studentEmail) {
+        alert("Student email not found in localStorage.");
+        return;
+      }
+      formData.append("studentEmail", studentEmail);
+
+      try {
+        const response = await fetch("/api/internship/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const result = await response.json();
+        alert("Internship details saved successfully!");
+        console.log("Success:", result);
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while saving internship details.");
+      }
+    }
+  </script>
+</body>
+</html>

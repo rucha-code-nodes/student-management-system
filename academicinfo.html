@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Academic Info</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ====== GLOBAL VARIABLES & RESETS ====== */
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent: #e74c3c;
+      --dark: #2c3e50;
+      --light: #ecf0f1;
+      --text: #34495e;
+      --highlight: #f1c40f;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: 70px; /* Offset for fixed navbar */
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      background-color: white;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      padding: 0.5rem 5%;
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(39, 174, 96, 0.1);
+      color: var(--primary);
+    }
+
+    .nav-links a.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .profile-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .profile-icon:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .mobile-menu {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ====== ACADEMIC INFO CONTAINER ====== */
+    .academic-container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 2.5rem;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    /* ====== PROFILE SECTION ====== */
+    .profile-section {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .profile-section {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+    }
+
+    .profile-photo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+
+    .profile-photo {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      transition: var(--transition);
+    }
+
+    .profile-photo:hover {
+      transform: scale(1.03);
+    }
+
+    .upload-btn {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .upload-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ====== INFO SECTIONS ====== */
+    .info-section {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .info-group {
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .info-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    .info-group input,
+    .info-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .info-group input:focus,
+    .info-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .error-message {
+      color: var(--accent);
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .error-border {
+      border-color: var(--accent) !important;
+    }
+
+    /* ====== BUTTONS ====== */
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+
+    .back-btn,
+    .next-btn,
+    .save-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-btn {
+      background-color: var(--light);
+      color: var(--dark);
+    }
+
+    .back-btn:hover {
+      background-color: #ddd;
+    }
+
+    .save-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .save-btn:hover {
+      background-color: var(--secondary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+    }
+
+    .next-btn {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .next-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    /* ====== MODAL ====== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      max-width: 500px;
+      width: 90%;
+      box-shadow: var(--box-shadow);
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--dark);
+    }
+
+    .modal-message {
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .modal-btn {
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .modal-btn:hover {
+      background-color: var(--primary-dark);
+    }
+
+    /* ====== RESPONSIVE DESIGN ====== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .academic-container {
+        padding: 1.5rem;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .info-section {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-photo {
+        width: 120px;
+        height: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> StudentSys
+    </div>
+    <ul class="nav-links">
+      <li><a href="SHome.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="SHome.html#about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a href="SHome.html#features"><i class="fas fa-star"></i> Features</a></li>
+      <li><a href="SHome.html#contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+      <li><a href="student-dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li>
+        <div class="profile-icon" onclick="location.href='profile.html'">
+          <i class="fas fa-user"></i>
+        </div>
+      </li>
+    </ul>
+    <div class="mobile-menu">
+      <i class="fas fa-bars"></i>
+    </div>
+  </nav>
+
+  <!-- Academic Info Container -->
+   <!-- Academic Info Container -->
+  <div class="academic-container">
+    <div class="profile-section">
+      <div class="profile-photo-container">
+        <img id="profilePreview" src="https://via.placeholder.com/150" alt="Profile" class="profile-photo">
+        <input type="file" accept="image/*" id="profileUpload" style="display: none;">
+        <label for="profileUpload" class="upload-btn">
+          <i class="fas fa-camera"></i> Choose Photo
+        </label>
+        <div id="photoError" class="error-message">Profile photo is required</div>
+      </div>
+      <div class="info-section">
+        <div class="info-group">
+          <label>Name</label>
+          <input type="text" placeholder="Full Name" id="nameInput" required>
+          <div id="nameError" class="error-message">Name is required</div>
+        </div>
+        <div class="info-group">
+          <label>PRN</label>
+          <input type="text" placeholder="PRN Number" id="prnInput" required>
+          <div id="prnError" class="error-message">PRN is required</div>
+        </div>
+        <div class="info-group">
+          <label>ABC ID</label>
+          <input type="text" placeholder="ABC ID" id="abcIdInput" required>
+          <div id="abcIdError" class="error-message">ABC ID is required</div>
+        </div>
+        <div class="info-group">
+          <label>Roll No</label>
+          <input type="text" placeholder="Roll Number" id="rollNoInput" required>
+          <div id="rollNoError" class="error-message">Roll number is required</div>
+        </div>
+        <div class="info-group">
+          <label>Date of Birth</label>
+          <input type="date" id="dobInput" required>
+          <div id="dobError" class="error-message">Date of birth is required</div>
+        </div>
+        <div class="info-group">
+          <label for="branchSelect">Branch</label>
+          <select id="branchSelect" name="branchSelect" required>
+            <option value="" disabled selected>Select your branch</option>
+            <option value="computer">Computer Engineering</option>
+            <option value="it">Information Technology</option>
+            <option value="aiml">AI & ML</option>
+            <option value="ai-ds">AI & DS</option>
+            <option value="electronics">Electronics Engineering</option>
+            <option value="civil">Civil Engineering</option>
+          </select>
+          <div id="branchError" class="error-message">Branch is required</div>
+        </div>
+
+        <div class="info-group">
+  <label for="classSelect">Class Name</label>
+  <select id="classSelect" name="classSelect" required>
+    <option value="" selected>Select Class</option>
+    <option value="FY">FY</option>
+    <option value="SY">SY</option>
+    <option value="TY">TY</option>
+    <option value="LY">LY</option>
+  </select>
+  <div id="classError" class="error-message">Class name is required</div>
+</div>
+
+
+        <div class="info-group">
+          <label>Gender</label>
+          <select id="genderSelect" required>
+            <option value="" selected>Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+          <div id="genderError" class="error-message">Gender is required</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="info-section">
+      <div class="info-group">
+        <label>Phone No</label>
+        <input type="text" placeholder="Phone Number" id="phoneInput" required>
+        <div id="phoneError" class="error-message">Phone number is required</div>
+      </div>
+      <div class="info-group">
+        <label>Personal Email ID</label>
+        <input type="email" placeholder="Email Address" id="emailInput" required>
+        <div id="emailError" class="error-message">Valid email is required</div>
+      </div>
+      <div class="info-group">
+        <label>Admission Year</label>
+        <select id="admissionYearSelect" required>
+          <option value="" selected>Select Admission Year</option>
+        </select>
+        <div id="admissionYearError" class="error-message">Admission year is required</div>
+      </div>
+      <div class="info-group">
+        <label>Admission Mode</label>
+        <select id="admissionMode" name="admissionMode" required>
+          <option value="" selected>Select Admission Mode</option>
+          <option value="CAP">CAP</option>
+          <option value="NON-CAP">NON-CAP</option>
+        </select>
+        <div id="admissionModeError" class="error-message">Admission mode is required</div>
+      </div>
+      <div class="info-group">
+        <label>Caste Category</label>
+        <select id="categorySelect" required>
+          <option value="" selected>Select Category</option>
+          <option value="OPEN">OPEN</option>
+          <option value="OBC">OBC</option>
+          <option value="SC">SC</option>
+          <option value="ST">ST</option>
+          <option value="EBC">EBC</option>
+          <option value="SBC">SBC</option>
+          <option value="VJNT">VJNT</option>
+          <option value="General">General</option>
+        </select>
+        <div id="categoryError" class="error-message">Caste category is required</div>
+      </div>
+      <div class="info-group">
+        <label>Sub-Caste</label>
+        <input type="text" placeholder="Sub-Caste" id="subCasteInput" required>
+        <div id="subCasteError" class="error-message">Sub-caste is required</div>
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button class="back-btn" onclick="window.location.href='student-dashboard.html'">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <button class="save-btn" onclick="validateAndSave()">
+        <i class="fas fa-save"></i> Save
+      </button>
+      <!-- <button class="next-btn" onclick="validateAndUpload()">
+        <i class="fas fa-upload"></i> Upload
+      </button> -->
+      <button class="next-btn" onclick="validateAndNext()">
+        Next <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div id="errorModal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Missing Information</h3>
+      <p class="modal-message" id="modalMessage">Please fill in all required fields before proceeding.</p>
+      <button class="modal-btn" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    // Profile image preview
+    const profileUpload = document.getElementById("profileUpload");
+    const profilePreview = document.getElementById("profilePreview");
+    profileUpload.addEventListener("change", function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const imageURL = URL.createObjectURL(file);
+        profilePreview.src = imageURL;
+        document.getElementById('photoError').style.display = 'none';
+      }
+    });
+
+    // Populate admission year dropdown
+    const admissionYearSelect = document.getElementById("admissionYearSelect");
+    for (let i = 2001; i <= 2030; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      admissionYearSelect.appendChild(option);
+    }
+
+    // Save caste category in localStorage
+    const categorySelect = document.getElementById("categorySelect");
+    categorySelect.addEventListener("change", function() {
+      localStorage.setItem("studentCategory", this.value);
+    });
+
+    // Validation functions
+    function validateForm() {
+      let isValid = true;
+      const errorFields = [];
+      
+      // Check profile photo
+      if (profileUpload.files.length === 0) {
+        document.getElementById('photoError').style.display = 'block';
+        isValid = false;
+        errorFields.push('Profile Photo');
+      } else {
+        document.getElementById('photoError').style.display = 'none';
+      }
+
+      // Check text inputs
+      const requiredInputs = [
+        { id: 'nameInput', errorId: 'nameError', fieldName: 'Name' },
+        { id: 'classSelect', errorId: 'classError', fieldName: 'Class Name' },
+
+        { id: 'prnInput', errorId: 'prnError', fieldName: 'PRN' },
+        { id: 'abcIdInput', errorId: 'abcIdError', fieldName: 'ABC ID' },
+        { id: 'rollNoInput', errorId: 'rollNoError', fieldName: 'Roll Number' },
+        { id: 'phoneInput', errorId: 'phoneError', fieldName: 'Phone Number' },
+        { id: 'emailInput', errorId: 'emailError', fieldName: 'Email' },
+        { id: 'subCasteInput', errorId: 'subCasteError', fieldName: 'Sub-Caste' }
+      ];
+
+      requiredInputs.forEach(input => {
+        const element = document.getElementById(input.id);
+        if (!element.value.trim()) {
+          document.getElementById(input.errorId).style.display = 'block';
+          element.classList.add('error-border');
+          isValid = false;
+          errorFields.push(input.fieldName);
+        } else {
+          document.getElementById(input.errorId).style.display = 'none';
+          element.classList.remove('error-border');
+        }
+      });
+
+      // Check date input
+      if (!document.getElementById('dobInput').value) {
+        document.getElementById('dobError').style.display = 'block';
+        document.getElementById('dobInput').classList.add('error-border');
+        isValid = false;
+        errorFields.push('Date of Birth');
+      } else {
+        document.getElementById('dobError').style.display = 'none';
+        document.getElementById('dobInput').classList.remove('error-border');
+      }
+
+      // Check select inputs
+      const requiredSelects = [
+        { id: 'branchSelect', errorId: 'branchError', fieldName: 'Branch' },
+        { id: 'genderSelect', errorId: 'genderError', fieldName: 'Gender' },
+        { id: 'admissionYearSelect', errorId: 'admissionYearError', fieldName: 'Admission Year' },
+        { id: 'admissionMode', errorId: 'admissionModeError', fieldName: 'Admission Mode' },
+        { id: 'categorySelect', errorId: 'categoryError', fieldName: 'Caste Category' }
+      ];
+
+      requiredSelects.forEach(select => {
+        const element = document.getElementById(select.id);
+        if (!element.value) {
+          document.getElementById(select.errorId).style.display = 'block';
+          element.classList.add('error-border');
+          isValid = false;
+          errorFields.push(select.fieldName);
+        } else {
+          document.getElementById(select.errorId).style.display = 'none';
+          element.classList.remove('error-border');
+        }
+      });
+
+      // Check email format
+      const emailInput = document.getElementById('emailInput');
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailInput.value && !emailRegex.test(emailInput.value)) {
+        document.getElementById('emailError').textContent = 'Please enter a valid email address';
+        document.getElementById('emailError').style.display = 'block';
+        emailInput.classList.add('error-border');
+        isValid = false;
+        if (!errorFields.includes('Email')) {
+          errorFields.push('Email');
+        }
+      }
+
+      return { isValid, errorFields };
+    }
+
+    // Save button logic
+    function validateAndSave() {
+      const { isValid, errorFields } = validateForm();
+      
+      if (isValid) {
+        saveDocuments();
+      } else {
+        showErrorModal(errorFields);
+      }
+    }
+
+    
+function saveDocuments() {
+  const data = getFormData();
+
+  const file = document.getElementById("profileUpload").files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = function () {
+      data.profileImage = reader.result; // ⬅️ Base64 encoded image
+      sendData(data);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    sendData(data); // If no image selected
+  }
+}
+
+function sendData(data) {
+  fetch('http://localhost:3000/api/student/save', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+    .then(res => res.json())
+    .then(res => {
+      alert('Data saved successfully!');
+      localStorage.setItem('studentPRN', data.prn);
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error saving data');
+    });
+}
+
+    // Upload button logic
+    function validateAndUpload() {
+      const { isValid, errorFields } = validateForm();
+      
+      if (isValid) {
+        uploadAndRedirect();
+      } else {
+        showErrorModal(errorFields);
+      }
+    }
+
+    function uploadAndRedirect() {
+      const studentEmail = localStorage.getItem('studentEmail');
+
+      if (studentEmail) {
+        window.location.href = 'profile.html';
+      } else {
+        alert('Please save your academic information first using the Save button.');
+      }
+    }
+
+    // Next button logic
+    function validateAndNext() {
+      const { isValid, errorFields } = validateForm();
+      
+      if (isValid) {
+        window.location.href = 'documents.html';
+      } else {
+        showErrorModal(errorFields);
+      }
+    }
+
+    // Modal functions
+    function showErrorModal(errorFields) {
+      const modal = document.getElementById('errorModal');
+      const message = document.getElementById('modalMessage');
+      
+      if (errorFields.length > 0) {
+        message.innerHTML = `The following fields are required:<br><br>${errorFields.join('<br>')}`;
+      } else {
+        message.textContent = 'Please fill in all required fields before proceeding.';
+      }
+      
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('errorModal').style.display = 'none';
+    }
+
+    // Common function to gather form data
+    function getFormData() {
+      const branchSelect = document.getElementById('branchSelect');
+      const admissionModeSelect = document.getElementById('admissionMode');
+      const classSelect = document.getElementById('classSelect'); // ⬅️ NEW
+      return {
+        name: document.getElementById('nameInput').value,
+        prn: document.getElementById('prnInput').value,
+        abcId: document.getElementById('abcIdInput').value,
+        rollNo: document.getElementById('rollNoInput').value,
+        dob: document.getElementById('dobInput').value,
+        branch: branchSelect.options[branchSelect.selectedIndex].text,
+        className: classSelect.options[classSelect.selectedIndex].value, // ⬅️ NEW
+        gender: document.getElementById('genderSelect').value,
+        phone: document.getElementById('phoneInput').value,
+        email: document.getElementById('emailInput').value,
+        admissionYear: document.getElementById('admissionYearSelect').value,
+        admissionMode: admissionModeSelect.options[admissionModeSelect.selectedIndex].text,
+        casteCategory: document.getElementById('categorySelect').value,
+        subCaste: document.getElementById('subCasteInput').value,
+        profileImage: document.getElementById('profilePreview').src
+      };
+    }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenu.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          navLinks.style.display = 'none';
+        }
+      });
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+      const modal = document.getElementById('errorModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

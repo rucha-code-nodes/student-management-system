@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ====== GLOBAL STYLES ====== */
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2ecc71;
+      --secondary-dark: #27ae60;
+      --accent: #e74c3c;
+      --dark: #2c3e50;
+      --light: #ecf0f1;
+      --text: #34495e;
+      --highlight: #f1c40f;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: var(--text);
+      padding-top: 70px; /* Offset for fixed navbar */
+      line-height: 1.6;
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      background-color: white;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      padding: 0.5rem 5%;
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(39, 174, 96, 0.1);
+      color: var(--primary);
+    }
+
+    .nav-links a.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .profile-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .profile-icon:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .mobile-menu {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ====== DASHBOARD CONTAINER ====== */
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2.5rem;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dashboard-container h1 {
+      color: var(--dark);
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* ====== DASHBOARD SECTIONS ====== */
+    .dashboard-sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .section-card {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-size: 1.25rem;
+      font-weight: 500;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .section-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+      z-index: -1;
+      transition: var(--transition);
+    }
+
+    .section-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .section-card:hover::before {
+      background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+    }
+
+    .section-card a {
+      text-decoration: none;
+      color: white;
+      display: block;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section-card i {
+      margin-right: 0.8rem;
+      font-size: 1.5rem;
+    }
+
+    /* Alternate card colors */
+    .section-card:nth-child(2n) {
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+    }
+
+    .section-card:nth-child(3n) {
+      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    }
+
+    .section-card:nth-child(4n) {
+      background: linear-gradient(135deg, var(--highlight), #f39c12);
+    }
+
+    .dashboard-container p {
+      margin-top: 2.5rem;
+      font-size: 1.1rem;
+      color: var(--text);
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    /* ====== RESPONSIVE DESIGN ====== */
+    @media (max-width: 992px) {
+      .dashboard-container h1 {
+        font-size: 2.2rem;
+      }
+      
+      .section-card {
+        padding: 2rem 1.25rem;
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .dashboard-container {
+        padding: 2rem 1.5rem;
+      }
+
+      .dashboard-sections {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+
+    @media (max-width: 576px) {
+      .dashboard-container {
+        padding: 1.5rem 1rem;
+        margin: 1rem;
+      }
+
+      .dashboard-container h1 {
+        font-size: 1.8rem;
+      }
+
+      .section-card {
+        padding: 1.75rem 1rem;
+        font-size: 1rem;
+      }
+
+      .section-card i {
+        font-size: 1.25rem;
+        margin-right: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> StudentSys
+    </div>
+    <ul class="nav-links">
+      <li><a href="SHome.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="SHome.html#about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a href="SHome.html#features"><i class="fas fa-star"></i> Features</a></li>
+      <li><a href="SHome.html#contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+      <li><a href="student-dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li>
+        <div class="profile-icon" onclick="location.href='profile.html'">
+          <i class="fas fa-user"></i>
+        </div>
+      </li>
+    </ul>
+    <div class="mobile-menu">
+      <i class="fas fa-bars"></i>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <h1>Student Dashboard</h1>
+
+    <div class="dashboard-sections">
+      <div class="section-card"><a href="academicinfo.html"><i class="fas fa-info-circle"></i> General Info</a></div>
+      <div class="section-card"><a href="documents.html"><i class="fas fa-file-alt"></i> Documents</a></div>
+      <div class="section-card"><a href="academicinfos.html"><i class="fas fa-graduation-cap"></i> Academic Marksheet</a></div>
+      <div class="section-card"><a href="payment.html"><i class="fas fa-money-bill-wave"></i> Academic Fee</a></div>
+      <div class="section-card"><a href="placementinfo.html"><i class="fas fa-briefcase"></i> Placement Section</a></div>
+      <div class="section-card"><a href="scholarshipinfo.html"><i class="fas fa-award"></i> Scholarship Section</a></div>
+      <div class="section-card"><a href="internship.html"><i class="fas fa-laptop-code"></i> Internship</a></div>
+      <div class="section-card"><a href="Achievement.html"><i class="fas fa-trophy"></i> Achievement Certificate</a></div>
+    </div>
+
+    <p>Welcome to your dashboard. Please select an option above to proceed.</p>
+  </div>
+
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenu.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          navLinks.style.display = 'none';
+        }
+      });
+    });
+
+    // Dynamically highlight active navigation link based on the current page
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      if (window.location.pathname.includes(link.getAttribute('href'))) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  </script>
+
+</body>
+</html>

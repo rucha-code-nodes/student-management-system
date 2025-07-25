@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About - Student Management System</title>
+  <style>
+    /* Same internal CSS */
+    body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); }
+    .logo { font-size: 24px; font-weight: bold; color: #27ae60; }
+    .nav-links { list-style: none; display: flex; gap: 30px; margin-right: 8%; }
+    .nav-links li { display: inline; }
+    .nav-links a { text-decoration: none; color: black; font-size: 16px; font-weight: 500; }
+    
+    .active { color: #27ae60; }
+  
+    .about-header { background-color: #f4f4f4; text-align: center; padding: 50px 0; margin-top: 80px; }
+    .about-content { padding: 60px 0; display: flex; justify-content: center; }
+    .content-wrapper { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; width: 90%; flex-wrap: wrap; }
+    .image-content { flex: 1; display: flex; justify-content: center; }
+    .image-content img { max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+    .text-content { flex: 1; padding-left: 40px; }
+    .text-content h2 { font-size: 28px; color: #333; font-weight: bold; margin-bottom: 15px; }
+    .text-content p { font-size: 16px; color: #666; margin-bottom: 15px; }
+    .text-content ul { list-style: none; padding: 0; }
+    .text-content ul li { font-size: 16px; color: #555; margin-bottom: 10px; }
+    .text-content ul li::before { content: "✔"; color: #27ae60; margin-right: 10px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="logo">StudentSys</div>
+  <ul class="nav-links">
+    <li><a href="Home1.html" class="active">Home</a></li>
+      <li><a href="About1.html" class="active">About Us</a></li>
+      <li><a href="batch.html"> Batches</a></li>
+      <li><a href="Contact1.html" class="active">Contact Us</a></li>
+
+    
+  </ul>
+</nav>
+
+<!-- About Section -->
+<section id="about">
+  <div class="about-header">
+    <h1>About Our Student Management System</h1>
+    <p>Our system helps students and administrators manage academic records, documents, placements, and scholarships efficiently.</p>
+  </div>
+  <div class="about-content">
+    <div class="content-wrapper">
+      <div class="image-content">
+        <img src="Assets\\collegeimage1.jpg" alt="College Campus"/>
+      </div>
+      <div class="text-content">
+        <h2>Why Choose Our System?</h2>
+        <p>Our Student Management System provides an easy-to-use interface for students to manage their academic records, submit documents, track placements, and apply for scholarships—all in one place.</p>
+        <ul>
+          <li>📄 Simplified Document Management</li>
+          <li>📊 Easy Placement Tracking</li>
+          <li>🎓 Scholarship Application Support</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
